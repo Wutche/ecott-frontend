@@ -1,0 +1,157 @@
+.container {
+  background-color: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--bg-card);
+}
+
+.header h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sessionItem {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.sessionItem:last-child {
+  border-bottom: none;
+}
+
+.sessionItem:hover {
+  background-color: var(--bg-body);
+}
+
+.expired {
+  opacity: 0.5;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemHeader strong {
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.itemBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  min-height: 28px;
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+.date {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.badge {
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.badgeActive {
+  background-color: transparent;
+  color: var(--color-success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badgeWarning {
+  background-color: transparent;
+  color: var(--color-warning);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badgeExpired {
+  background-color: transparent;
+  color: var(--color-danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.sessionItem:hover .actions {
+  opacity: 1;
+}
+
+.actionBtn {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.actionBtn:hover {
+  background-color: var(--bg-card);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+.deleteBtn:hover {
+  color: var(--color-danger);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+@media (max-width: 768px) {
+  .actions {
+    opacity: 1;
+  }
+}

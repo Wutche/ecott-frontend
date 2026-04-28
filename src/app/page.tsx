@@ -1,64 +1,78 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import React, { useState } from 'react';
+import UploadArea, { AnalysisRequestData } from '@/components/UploadArea';
+import AnalysisDashboard, { COTData } from '@/components/AnalysisDashboard';
+import ChatInterface from '@/components/ChatInterface';
+import SessionsManager from '@/components/SessionsManager';
+import styles from './page.module.css';
 
 export default function Home() {
+  const [activeData, setActiveData] = useState<COTData | null>(null);
+
+  const handleAnalyze = (requestData: AnalysisRequestData) => {
+    // Mock the AI Response JSON
+    const mockResponse: COTData = {
+      pair: requestData.pair || 'EUR/USD',
+      reportDate: 'Oct 12, 2026',
+      overallBias: 'Bullish',
+      biasStrength: 'Strong',
+      confidence: 85,
+      biasSubtitle: 'Asset Managers and Leveraged Funds align on long accumulation.',
+      participants: {
+        assetManager: { net: '+45,230', direction: 'Long', trend: 'Adding Longs', signal: 'Bullish' },
+        leveragedFund: { net: '+12,400', direction: 'Long', trend: 'Flipping Net Long', signal: 'Bullish' },
+        dealer: { net: '-58,000', direction: 'Short', trend: 'Providing Liquidity', signal: 'Bearish (Expected)' },
+      },
+      scenarios: [
+        { type: 'Primary', icon: '📈', label: 'Continuation', text: 'Price respects current support and continues upward.' },
+        { type: 'Alternative', icon: '📉', label: 'Pullback', text: 'Temporary dip to gather liquidity before moving higher.' },
+        { type: 'Invalidation', icon: '🛑', label: 'Trend Break', text: 'Price breaks key support, invalidating the bullish bias.' }
+      ],
+      actionSteps: [
+        'Monitor the 1.0500 support level for price action.',
+        'Wait for London session volume to confirm the move.',
+        'Scale into longs if price rejects the lower boundary.',
+        'Watch for cross-pair divergence with GBP/USD.'
+      ]
+    };
+    setActiveData(mockResponse);
+  };
+
+  const handleSelectSession = (pair: string, sessionLabel: string) => {
+    handleAnalyze({ fileCount: 0, pair, sessionLabel });
+  };
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      <nav className={styles.navbar}>
+        <div className={styles.logo}>
+          <span className={styles.logoIcon}>⬛</span>
+          ecott
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className={styles.navLinks}>
+          <button className={styles.navBtn} onClick={() => setActiveData(null)}>New Analysis</button>
+        </div>
+      </nav>
+
+      <main className={styles.main}>
+        <div className={styles.sidebar}>
+          <SessionsManager onSelectSession={handleSelectSession} />
+        </div>
+
+        <div className={styles.content}>
+          {!activeData ? (
+            <UploadArea onAnalyze={handleAnalyze} />
+          ) : (
+            <div className={styles.dashboardLayout}>
+              <div className={styles.dashboardMain}>
+                <AnalysisDashboard data={activeData} />
+              </div>
+              <div className={styles.dashboardSide}>
+                <ChatInterface />
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
