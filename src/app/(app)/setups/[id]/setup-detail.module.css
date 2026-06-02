@@ -1,0 +1,141 @@
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.linkButton:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+}
+
+.factorList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.factorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.factorRow:last-child {
+  border-bottom: none;
+}
+
+.factorLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.factorMarker {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.factorPass {
+  color: var(--color-success);
+  border-color: var(--color-success);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.factorFail {
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.factorName {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.factorPoints {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+.geometryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.875rem 1.25rem;
+}
+
+.geometryItem dt {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.geometryItem dd {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.notes {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.notesLabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.notes p {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.outcomePlaceholder {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}

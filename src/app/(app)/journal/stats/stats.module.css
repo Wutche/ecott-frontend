@@ -1,0 +1,68 @@
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+}
+
+.breakdownHead,
+.breakdownRow {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 1fr 0.8fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.breakdownHead {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.breakdownRow {
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.breakdownRow:last-child {
+  border-bottom: none;
+}
+
+.breakdownLabel {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.cellNumeric {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}

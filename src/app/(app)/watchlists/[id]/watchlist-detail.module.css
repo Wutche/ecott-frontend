@@ -1,0 +1,124 @@
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.linkButton:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-hover);
+}
+
+.outlineButton {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background-color: var(--bg-card);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.12s ease;
+}
+
+.outlineButton:hover {
+  border-color: var(--color-border-hover);
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHead,
+.tableRow {
+  display: grid;
+  grid-template-columns:
+    minmax(96px, 1fr) minmax(160px, 1.5fr) minmax(140px, 1.4fr) minmax(96px, 0.8fr)
+    minmax(96px, 0.8fr) minmax(112px, 0.8fr) minmax(112px, 0.9fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.tableHead {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tableRow {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.pairCode {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.cellNumeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.cellMixed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.cellHint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.cellMuted {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+}
+
+.statementsSection {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.statementList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.statementHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+}
+
+.statementBody {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}

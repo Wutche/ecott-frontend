@@ -1,0 +1,67 @@
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHead,
+.tableRow {
+  display: grid;
+  grid-template-columns:
+    minmax(96px, 1fr) minmax(120px, 1fr) minmax(96px, 0.8fr) minmax(80px, 0.7fr)
+    minmax(112px, 0.9fr) 24px;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.5rem;
+}
+
+.tableHead {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tableRow {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.12s ease;
+}
+
+.tableRow:hover {
+  background-color: var(--bg-body);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.pairCode {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.cellNumeric {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.cellMuted {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+}
+
+.openIndicator {
+  color: var(--color-text-muted);
+  text-align: right;
+}

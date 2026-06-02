@@ -1,0 +1,55 @@
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.criteriaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.875rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 720px) {
+  .criteriaGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.criteriaGrid dt {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.criteriaGrid dd {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.notes {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}

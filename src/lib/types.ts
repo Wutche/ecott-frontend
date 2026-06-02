@@ -1,0 +1,284 @@
+export type CurrencyPair =
+  | 'EURUSD'
+  | 'GBPUSD'
+  | 'USDJPY'
+  | 'USDCAD'
+  | 'AUDUSD'
+  | 'NZDUSD'
+  | 'USDCHF'
+  | 'DXY';
+
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'CAD' | 'AUD' | 'NZD' | 'CHF';
+
+export type BiasDirection = 'bullish' | 'bearish' | 'neutral';
+export type BiasStrength = 'strongly' | 'moderately' | 'tentatively';
+
+export type Phase = 1 | 2 | 3 | 4 | 5 | 6;
+
+export type PhaseConfidence =
+  | 'high_conviction'
+  | 'confirmed'
+  | 'developing'
+  | 'transitional'
+  | 'insufficient_data';
+
+export type SetupModel =
+  | 'fibonacci_retracement'
+  | 'structure_break_and_retest'
+  | 'divergence_fade';
+
+export type SetupDirection = 'long' | 'short';
+
+export type SetupStatus =
+  | 'active'
+  | 'closed_target_1_hit'
+  | 'closed_target_2_hit'
+  | 'closed_target_3_hit'
+  | 'closed_stopped_out'
+  | 'closed_manual'
+  | 'expired'
+  | 'invalidated';
+
+export type SetupClassification =
+  | 'no_setup'
+  | 'active_setup'
+  | 'high_conviction_setup';
+
+export type LiquidityPoolKind =
+  | 'buy_side_liquidity'
+  | 'sell_side_liquidity'
+  | 'fair_value_gap'
+  | 'order_block'
+  | 'breaker_block'
+  | 'liquidity_void';
+
+export type LiquidityPoolType =
+  | 'monthly_high_low'
+  | 'weekly_high_low'
+  | 'daily_high_low'
+  | 'swing_high_low'
+  | 'equal_high_low'
+  | 'round_number'
+  | 'consolidation';
+
+export type LiquidityTimeframe =
+  | 'monthly'
+  | 'weekly'
+  | 'daily'
+  | 'four_hour'
+  | 'one_hour';
+
+export type LiquidityTimeAtLevel =
+  | 'single_candle'
+  | 'few_candles'
+  | 'multiple_hours'
+  | 'consolidation_zone';
+
+export type LiquidityPoolClassification =
+  | 'primary_target'
+  | 'significant_pool'
+  | 'moderate_pool'
+  | 'weak_pool';
+
+export type LiquidityPoolStatus = 'active' | 'swept' | 'expired';
+
+export type TradeOutcome = 'win' | 'loss' | 'break_even';
+
+export type AlertType =
+  | 'high_conviction_setup'
+  | 'setup_invalidated'
+  | 'target_hit'
+  | 'stop_hit'
+  | 'cot_phase_transition'
+  | 'cot_bias_flip'
+  | 'cross_report_rotation'
+  | 'weekly_story_published';
+
+export type AlertSeverity = 'info' | 'notable' | 'critical';
+
+export type NewsImpact = 'high' | 'medium' | 'low';
+
+export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  account_balance_usd: string | null;
+  default_risk_percentage: string | null;
+  primary_trading_pair: CurrencyPair | null;
+  preferred_pairs: CurrencyPair[];
+  timezone: string;
+  experience_level: ExperienceLevel | null;
+}
+
+export interface ConfluenceFactor {
+  name: string;
+  points_awarded: string;
+  passed: boolean;
+}
+
+export interface UserSetup {
+  id: string;
+  user_id: string;
+  pair_code: CurrencyPair;
+  model: SetupModel;
+  direction: SetupDirection;
+  swing_high: string;
+  swing_low: string;
+  entry_zone_low: string;
+  entry_zone_high: string;
+  stop_loss_price: string;
+  target_1_price: string;
+  target_2_price: string | null;
+  target_3_price: string | null;
+  confluence_score: string;
+  confluence_classification: SetupClassification;
+  confluence_factors: ConfluenceFactor[];
+  cot_report_date: string;
+  status: SetupStatus;
+  notes: string | null;
+  activated_at: string;
+  closed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LiquidityPool {
+  id: string;
+  user_id: string;
+  pair_code: CurrencyPair;
+  kind: LiquidityPoolKind;
+  pool_type: LiquidityPoolType;
+  timeframe: LiquidityTimeframe;
+  price_level: string;
+  zone_upper_price: string | null;
+  zone_lower_price: string | null;
+  obviousness_rating: number;
+  is_untested: boolean;
+  time_at_level: LiquidityTimeAtLevel;
+  is_cot_direction_aligned: boolean;
+  timeframe_visibility_count: number;
+  validation_score: string;
+  classification: LiquidityPoolClassification;
+  status: LiquidityPoolStatus;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface TradeJournalEntry {
+  id: string;
+  user_id: string;
+  setup_id: string;
+  close_price: string;
+  r_multiple: string;
+  pips_gained: string;
+  outcome: TradeOutcome;
+  closed_at: string;
+  reflection_notes: string | null;
+  lessons_learned: string | null;
+  screenshots: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PairPerformance {
+  total_trades: number;
+  wins: number;
+  losses: number;
+  break_evens: number;
+  win_rate_percentage: string;
+  average_r_multiple: string;
+}
+
+export interface PerformanceStats {
+  total_trades: number;
+  wins: number;
+  losses: number;
+  break_evens: number;
+  win_rate_percentage: string;
+  average_r_multiple: string;
+  total_r_multiple: string;
+  expectancy_r_multiple: string;
+  largest_win_r_multiple: string;
+  largest_loss_r_multiple: string;
+  current_streak_length: number;
+  current_streak_outcome: TradeOutcome | null;
+  by_pair_code: Record<string, PairPerformance>;
+  by_setup_model: Record<string, PairPerformance>;
+}
+
+export interface Watchlist {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  created_at: string;
+}
+
+export interface WatchlistItem {
+  pair_code: CurrencyPair;
+  sort_order: number;
+  latest_report_date: string | null;
+  bias_direction: BiasDirection | null;
+  bias_strength: BiasStrength | null;
+  bias_statement_text: string | null;
+  phase: Phase | null;
+  phase_confidence: PhaseConfidence | null;
+  phase_confidence_percentage: string | null;
+  leveraged_funds_cot_index_value: string | null;
+  active_setup_count: number;
+  active_liquidity_pool_count: number;
+}
+
+export interface WatchlistDetail extends Watchlist {
+  items: WatchlistItem[];
+}
+
+export interface Alert {
+  id: string;
+  user_id: string;
+  alert_type: AlertType;
+  severity: AlertSeverity;
+  title: string;
+  body: string;
+  payload_json: Record<string, unknown>;
+  is_read: boolean;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface NewsEvent {
+  id: string;
+  source: string;
+  source_event_id: string;
+  event_at: string;
+  currency: Currency;
+  impact: NewsImpact;
+  name: string;
+  description: string | null;
+}
+
+export interface BlackoutCheck {
+  pair_code: CurrencyPair;
+  evaluated_at: string;
+  in_blackout: boolean;
+  minutes_until_event: number | null;
+  minutes_since_event: number | null;
+  triggering_event: {
+    event_at: string;
+    currency: Currency;
+    impact: NewsImpact;
+    name: string;
+  } | null;
+}
+
+export interface WeeklyStory {
+  pair_code: CurrencyPair;
+  report_date: string;
+  chapter_1_text: string;
+  chapter_2_text: string | null;
+  chapter_3_text: string | null;
+  chapter_4_text: string | null;
+  chapter_5_text: string | null;
+  updated_at: string;
+}

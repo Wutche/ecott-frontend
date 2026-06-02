@@ -1,0 +1,49 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.cardLink {
+  display: block;
+  transition: transform 0.12s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-1px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+}
+
+.pairCode {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.weekLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.snippet {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  min-height: 4.5rem;
+}
+
+.cardFooter {
+  margin-top: 1rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.8125rem;
+  color: var(--color-accent-primary);
+  font-weight: 500;
+}

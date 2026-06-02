@@ -1,0 +1,44 @@
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.editor {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.875rem;
+  background-color: var(--bg-body);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  line-height: 1.6;
+}
+
+.editor:focus {
+  border-color: var(--color-accent-primary);
+}
+
+.staticText {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  padding: 0.625rem 0;
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}

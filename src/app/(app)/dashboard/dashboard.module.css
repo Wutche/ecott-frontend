@@ -1,0 +1,225 @@
+.section {
+  margin-bottom: 1.75rem;
+}
+
+.watchlistHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.watchlistTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.watchlistSubtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.125rem;
+}
+
+.linkButton {
+  font-size: 0.8125rem;
+  color: var(--color-accent-primary);
+  font-weight: 500;
+  transition: color 0.12s ease;
+}
+
+.linkButton:hover {
+  color: var(--color-accent-hover);
+}
+
+.watchlistGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px;
+  background-color: var(--color-border);
+}
+
+.pairCard {
+  background-color: var(--bg-card);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pairCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pairCode {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pairMetrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem 1.25rem;
+}
+
+.pairMetrics dt {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.125rem;
+}
+
+.pairMetrics dd {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.metricHint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.pairFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.pairFooterText {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alertList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.alertRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.alertRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.alertRow:first-child {
+  padding-top: 0;
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.alertTime {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.alertTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.alertBody {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.newsList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.newsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.newsRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.newsRow:first-child {
+  padding-top: 0;
+}
+
+.newsLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.newsCurrency {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.newsBody {
+  min-width: 0;
+}
+
+.newsName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.newsTime {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}

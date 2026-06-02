@@ -1,0 +1,76 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.cardLink {
+  display: block;
+  transition: transform 0.12s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-1px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.cardSubtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.itemCount {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.pairList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.pairRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.8125rem;
+}
+
+.pairRow:last-child {
+  border-bottom: none;
+}
+
+.pairCode {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardFooter {
+  margin-top: 1rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
