@@ -42,7 +42,8 @@ export type SetupStatus =
 export type SetupClassification =
   | 'no_setup'
   | 'active_setup'
-  | 'high_conviction_setup';
+  | 'high_conviction_setup'
+  | 'max_conviction_setup';
 
 export type LiquidityPoolKind =
   | 'buy_side_liquidity'
@@ -95,8 +96,6 @@ export type AlertType =
   | 'weekly_story_published';
 
 export type AlertSeverity = 'info' | 'notable' | 'critical';
-
-export type NewsImpact = 'high' | 'medium' | 'low';
 
 export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
 
@@ -247,34 +246,103 @@ export interface Alert {
   created_at: string;
 }
 
-export interface NewsEvent {
-  id: string;
-  source: string;
-  source_event_id: string;
-  event_at: string;
-  currency: Currency;
-  impact: NewsImpact;
-  name: string;
-  description: string | null;
+export type FundamentalBias =
+  | 'strongly_bullish'
+  | 'bullish'
+  | 'neutral'
+  | 'bearish'
+  | 'strongly_bearish';
+
+export type FundamentalPhase =
+  | 'tightening'
+  | 'peak_bullish'
+  | 'loosening'
+  | 'trough_bearish'
+  | 'transition';
+
+export type FundamentalTrendDirection = 'improving' | 'stable' | 'deteriorating';
+
+export type CentralBankStance = 'hawkish' | 'neutral' | 'dovish';
+
+export type DivergenceType =
+  | 'fundamental_vs_cot'
+  | 'fundamental_vs_price'
+  | 'cot_vs_price'
+  | 'triple_divergence';
+
+export type DivergenceSeverity = 'low' | 'medium' | 'high' | 'critical';
+
+export interface ComponentScore {
+  component: string;
+  score: string;
+  weight: string;
 }
 
-export interface BlackoutCheck {
-  pair_code: CurrencyPair;
-  evaluated_at: string;
-  in_blackout: boolean;
-  minutes_until_event: number | null;
-  minutes_since_event: number | null;
-  triggering_event: {
-    event_at: string;
-    currency: Currency;
-    impact: NewsImpact;
-    name: string;
-  } | null;
+export interface FundamentalScore {
+  asset_code: string;
+  score_date: string;
+  total_score: string;
+  bias: FundamentalBias;
+  phase: FundamentalPhase | null;
+  component_scores: ComponentScore[];
+}
+
+export interface CurrencyRanking {
+  rank: number;
+  currency_code: Currency;
+  score: string;
+  bias: FundamentalBias;
+}
+
+export interface StrengthPairIdea {
+  long_currency_code: Currency;
+  short_currency_code: Currency;
+  score_gap: string;
+}
+
+export interface CurrencyStrengthMatrix {
+  rankings: CurrencyRanking[];
+  best_pair_ideas: StrengthPairIdea[];
+}
+
+export interface FundamentalTrend {
+  asset_code: string;
+  current_score: string;
+  change_4_week: string | null;
+  change_12_week: string | null;
+  change_26_week: string | null;
+  consecutive_weeks: number;
+  direction: FundamentalTrendDirection;
+}
+
+export interface DivergenceAlert {
+  id: string;
+  asset_code: string;
+  pair_code: CurrencyPair | null;
+  divergence_type: DivergenceType;
+  severity: DivergenceSeverity;
+  fundamental_bias: FundamentalBias;
+  cot_bias: BiasDirection;
+  magnitude: string;
+  message: string;
+  detected_date: string;
+  resolved_date: string | null;
+}
+
+export interface CentralBankStanceRecord {
+  central_bank_code: string;
+  currency_code: Currency;
+  stance: CentralBankStance;
+  stance_score: string;
+  decision: string | null;
+  next_meeting: string | null;
+  updated_at: string;
 }
 
 export interface WeeklyStory {
   pair_code: CurrencyPair;
   report_date: string;
+  chapter_0_text: string | null;
   chapter_1_text: string;
   chapter_2_text: string | null;
   chapter_3_text: string | null;

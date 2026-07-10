@@ -3,13 +3,18 @@ import type {
   AlertType,
   BiasDirection,
   BiasStrength,
+  CentralBankStance,
   CurrencyPair,
+  DivergenceSeverity,
+  DivergenceType,
+  FundamentalBias,
+  FundamentalPhase,
+  FundamentalTrendDirection,
   LiquidityPoolClassification,
   LiquidityPoolKind,
   LiquidityPoolType,
   LiquidityTimeAtLevel,
   LiquidityTimeframe,
-  NewsImpact,
   Phase,
   PhaseConfidence,
   SetupClassification,
@@ -90,6 +95,7 @@ export const SETUP_CLASSIFICATION_LABELS: Record<SetupClassification, string> = 
   no_setup: 'No setup',
   active_setup: 'Active setup',
   high_conviction_setup: 'High conviction',
+  max_conviction_setup: 'Max conviction',
 };
 
 export const LIQUIDITY_POOL_KIND_LABELS: Record<LiquidityPoolKind, string> = {
@@ -156,12 +162,6 @@ export const TRADE_OUTCOME_LABELS: Record<TradeOutcome, string> = {
   break_even: 'Break-even',
 };
 
-export const NEWS_IMPACT_LABELS: Record<NewsImpact, string> = {
-  high: 'High impact',
-  medium: 'Medium',
-  low: 'Low',
-};
-
 export const CONFLUENCE_FACTOR_LABELS: Record<string, string> = {
   cot_bias_aligned: 'COT bias aligned',
   price_at_fib_618: 'Price at Fib 61.8%',
@@ -172,6 +172,53 @@ export const CONFLUENCE_FACTOR_LABELS: Record<string, string> = {
   structure_fib_double_confluence: 'Structure + Fib confluence',
   leveraged_funds_extreme_or_flip: 'LF extreme or flip',
   dealer_stop_hunt_wick: 'Dealer stop-hunt wick',
+  fundamental_score_aligned: 'Fundamental score aligned',
+  fundamental_momentum_aligned: 'Fundamental momentum aligned',
+};
+
+export const FUNDAMENTAL_BIAS_LABELS: Record<FundamentalBias, string> = {
+  strongly_bullish: 'Strongly Bullish',
+  bullish: 'Bullish',
+  neutral: 'Neutral',
+  bearish: 'Bearish',
+  strongly_bearish: 'Strongly Bearish',
+};
+
+export const FUNDAMENTAL_PHASE_LABELS: Record<FundamentalPhase, string> = {
+  tightening: 'Tightening',
+  peak_bullish: 'Peak Bullish',
+  loosening: 'Loosening',
+  trough_bearish: 'Trough Bearish',
+  transition: 'Transition',
+};
+
+export const FUNDAMENTAL_TREND_LABELS: Record<FundamentalTrendDirection, string> = {
+  improving: 'Improving',
+  stable: 'Stable',
+  deteriorating: 'Deteriorating',
+};
+
+export const CENTRAL_BANK_STANCE_LABELS: Record<CentralBankStance, string> = {
+  hawkish: 'Hawkish',
+  neutral: 'Neutral',
+  dovish: 'Dovish',
+};
+
+export const DIVERGENCE_TYPE_LABELS: Record<DivergenceType, string> = {
+  fundamental_vs_cot: 'Fundamental vs COT',
+  fundamental_vs_price: 'Fundamental vs Price',
+  cot_vs_price: 'COT vs Price',
+  triple_divergence: 'Triple divergence',
+};
+
+export const FUNDAMENTAL_COMPONENT_LABELS: Record<string, string> = {
+  interest_rate: 'Interest rate',
+  central_bank_stance: 'Central bank stance',
+  economic_growth: 'Economic growth',
+  inflation: 'Inflation',
+  employment: 'Employment',
+  trade_balance: 'Trade balance',
+  political_stability: 'Political stability',
 };
 
 
@@ -198,8 +245,34 @@ export function tradeOutcomeTone(outcome: TradeOutcome): StatusTone {
 }
 
 export function setupClassificationTone(value: SetupClassification): StatusTone {
+  if (value === 'max_conviction_setup') return 'success';
   if (value === 'high_conviction_setup') return 'success';
   if (value === 'active_setup') return 'info';
+  return 'neutral';
+}
+
+export function fundamentalBiasTone(bias: FundamentalBias | null): StatusTone {
+  if (bias === 'strongly_bullish' || bias === 'bullish') return 'success';
+  if (bias === 'strongly_bearish' || bias === 'bearish') return 'danger';
+  return 'neutral';
+}
+
+export function fundamentalTrendTone(direction: FundamentalTrendDirection): StatusTone {
+  if (direction === 'improving') return 'success';
+  if (direction === 'deteriorating') return 'danger';
+  return 'neutral';
+}
+
+export function divergenceSeverityTone(severity: DivergenceSeverity): StatusTone {
+  if (severity === 'critical') return 'danger';
+  if (severity === 'high') return 'warning';
+  if (severity === 'medium') return 'info';
+  return 'neutral';
+}
+
+export function fundamentalScoreTone(score: number): StatusTone {
+  if (score >= 60) return 'success';
+  if (score < 40) return 'danger';
   return 'neutral';
 }
 
@@ -217,13 +290,6 @@ export function alertSeverityTone(severity: AlertSeverity): StatusTone {
   if (severity === 'notable') return 'warning';
   return 'info';
 }
-
-export function newsImpactTone(impact: NewsImpact): StatusTone {
-  if (impact === 'high') return 'danger';
-  if (impact === 'medium') return 'warning';
-  return 'neutral';
-}
-
 
 const SECONDS_PER_MINUTE = 60;
 const MINUTES_PER_HOUR = 60;

@@ -5,30 +5,31 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
 import {
   ALERT_INBOX,
+  CURRENCY_STRENGTH_MATRIX,
   CURRENT_USER_PROFILE,
+  DIVERGENCE_ALERTS,
   PRIMARY_WATCHLIST,
-  UPCOMING_NEWS_EVENTS,
 } from '@/lib/fixtures';
 import {
   ALERT_TYPE_LABELS,
   BIAS_DIRECTION_LABELS,
   BIAS_STRENGTH_LABELS,
   CURRENCY_PAIR_LABELS,
-  NEWS_IMPACT_LABELS,
+  DIVERGENCE_TYPE_LABELS,
   PHASE_LABELS,
   alertSeverityTone,
   biasDirectionTone,
+  divergenceSeverityTone,
   formatDate,
-  formatDateTime,
   formatPercentage,
   formatRelativeTime,
-  newsImpactTone,
 } from '@/lib/display';
 import styles from './dashboard.module.css';
 
 export default function DashboardPage() {
   const unreadAlerts = ALERT_INBOX.filter((alert) => !alert.is_read).slice(0, 4);
-  const upcomingHighImpact = UPCOMING_NEWS_EVENTS.filter((event) => event.impact === 'high').slice(0, 4);
+  const topOpportunities = CURRENCY_STRENGTH_MATRIX.best_pair_ideas.slice(0, 3);
+  const activeDivergences = DIVERGENCE_ALERTS.filter((item) => item.resolved_date === null);
 
   return (
     <>
@@ -144,36 +145,50 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader
-            title="Upcoming news risk"
-            subtitle="High-impact events to plan around."
+            title="Fundamental divergences"
+            subtitle="Where institutions and fundamentals disagree."
             trailing={
-              <Link href="/news" className={styles.linkButton}>
-                See all →
+              <Link href="/fundamentals" className={styles.linkButton}>
+                Open fundamentals →
               </Link>
             }
           />
-          {upcomingHighImpact.length === 0 ? (
+          {activeDivergences.length === 0 ? (
             <EmptyState
-              title="No upcoming high-impact events"
-              description="Calendar refreshes daily. Medium and low impact events appear under /news."
+              title="No active divergences"
+              description="Fundamental-vs-COT conflicts surface here as they form."
             />
           ) : (
-            <ul className={styles.newsList}>
-              {upcomingHighImpact.map((event) => (
-                <li key={event.id} className={styles.newsRow}>
-                  <div className={styles.newsLeft}>
-                    <span className={styles.newsCurrency}>{event.currency}</span>
-                    <div className={styles.newsBody}>
-                      <p className={styles.newsName}>{event.name}</p>
-                      <p className={styles.newsTime}>{formatDateTime(event.event_at)}</p>
+            <>
+              <ul className={styles.alertList}>
+                {activeDivergences.map((divergence) => (
+                  <li key={divergence.id} className={styles.alertRow}>
+                    <div className={styles.alertHeader}>
+                      <Badge tone={divergenceSeverityTone(divergence.severity)} variant="soft">
+                        {DIVERGENCE_TYPE_LABELS[divergence.divergence_type]}
+                      </Badge>
+                      <span className={styles.alertTime}>
+                        {divergence.pair_code
+                          ? CURRENCY_PAIR_LABELS[divergence.pair_code]
+                          : divergence.asset_code}
+                      </span>
                     </div>
-                  </div>
-                  <Badge tone={newsImpactTone(event.impact)} variant="outline">
-                    {NEWS_IMPACT_LABELS[event.impact]}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
+                    <p className={styles.alertBody}>{divergence.message}</p>
+                  </li>
+                ))}
+              </ul>
+              <div className={styles.opportunityRow}>
+                <span className={styles.opportunityLabel}>Top fundamental pairs</span>
+                <div className={styles.opportunityChips}>
+                  {topOpportunities.map((idea) => (
+                    <span key={`${idea.long_currency_code}${idea.short_currency_code}`} className={styles.opportunityChip}>
+                      {idea.long_currency_code}/{idea.short_currency_code}
+                      <span className={styles.opportunityGap}>+{idea.score_gap}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </Card>
       </section>

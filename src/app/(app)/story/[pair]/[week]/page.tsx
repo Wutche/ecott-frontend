@@ -11,6 +11,7 @@ interface RouteProps {
 }
 
 const CHAPTERS: Array<{ key: keyof typeof CURRENT_WEEK_STORY; title: string; editable: boolean }> = [
+  { key: 'chapter_0_text', title: 'Chapter 0 — Fundamental backdrop', editable: false },
   { key: 'chapter_1_text', title: 'Chapter 1 — COT context', editable: false },
   { key: 'chapter_2_text', title: 'Chapter 2 — Multi-timeframe structure', editable: true },
   { key: 'chapter_3_text', title: 'Chapter 3 — Liquidity targets', editable: true },
@@ -26,7 +27,7 @@ export default async function StoryDetailPage({ params }: RouteProps) {
     <>
       <PageHeader
         title={`${pairLabel} — ${formatDate(week)}`}
-        subtitle="Chapter 1 is auto-generated each Friday. Chapters 2–5 are yours to author."
+        subtitle="Chapters 0–1 are auto-generated each Friday. Chapters 2–5 are yours to author."
         actions={
           <Link href="/story" className={styles.linkButton}>
             ← All stories
@@ -41,7 +42,7 @@ export default async function StoryDetailPage({ params }: RouteProps) {
             <Card key={chapter.key}>
               <CardHeader
                 title={chapter.title}
-                subtitle={chapter.editable ? 'User-editable' : 'Auto-generated from CFTC data'}
+                subtitle={chapter.editable ? 'User-editable' : 'Auto-generated'}
               />
               {chapter.editable ? (
                 <textarea

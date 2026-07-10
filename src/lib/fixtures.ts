@@ -1,8 +1,10 @@
 import type {
   Alert,
-  BlackoutCheck,
+  CurrencyStrengthMatrix,
+  DivergenceAlert,
+  FundamentalScore,
+  FundamentalTrend,
   LiquidityPool,
-  NewsEvent,
   PerformanceStats,
   TradeJournalEntry,
   UserProfile,
@@ -509,61 +511,105 @@ export const LIQUIDITY_POOLS: LiquidityPool[] = [
   },
 ];
 
-export const UPCOMING_NEWS_EVENTS: NewsEvent[] = [
+export const CURRENCY_STRENGTH_MATRIX: CurrencyStrengthMatrix = {
+  rankings: [
+    { rank: 1, currency_code: 'USD', score: '78.0', bias: 'strongly_bullish' },
+    { rank: 2, currency_code: 'GBP', score: '65.0', bias: 'bullish' },
+    { rank: 3, currency_code: 'AUD', score: '58.0', bias: 'neutral' },
+    { rank: 4, currency_code: 'CAD', score: '52.0', bias: 'neutral' },
+    { rank: 5, currency_code: 'NZD', score: '48.0', bias: 'neutral' },
+    { rank: 6, currency_code: 'CHF', score: '42.0', bias: 'neutral' },
+    { rank: 7, currency_code: 'EUR', score: '35.0', bias: 'bearish' },
+    { rank: 8, currency_code: 'JPY', score: '22.0', bias: 'strongly_bearish' },
+  ],
+  best_pair_ideas: [
+    { long_currency_code: 'USD', short_currency_code: 'JPY', score_gap: '56.0' },
+    { long_currency_code: 'GBP', short_currency_code: 'JPY', score_gap: '43.0' },
+    { long_currency_code: 'USD', short_currency_code: 'EUR', score_gap: '43.0' },
+  ],
+};
+
+export const FUNDAMENTAL_SCORES: Record<string, FundamentalScore> = {
+  USD: {
+    asset_code: 'USD',
+    score_date: '2026-05-27',
+    total_score: '78.0',
+    bias: 'strongly_bullish',
+    phase: 'peak_bullish',
+    component_scores: [
+      { component: 'interest_rate', score: '85.0', weight: '0.30' },
+      { component: 'central_bank_stance', score: '85.0', weight: '0.20' },
+      { component: 'economic_growth', score: '73.0', weight: '0.15' },
+      { component: 'inflation', score: '100.0', weight: '0.15' },
+      { component: 'employment', score: '76.5', weight: '0.10' },
+      { component: 'trade_balance', score: '30.0', weight: '0.05' },
+      { component: 'political_stability', score: '70.0', weight: '0.05' },
+    ],
+  },
+  JPY: {
+    asset_code: 'JPY',
+    score_date: '2026-05-27',
+    total_score: '22.0',
+    bias: 'strongly_bearish',
+    phase: 'trough_bearish',
+    component_scores: [
+      { component: 'interest_rate', score: '18.0', weight: '0.30' },
+      { component: 'central_bank_stance', score: '15.0', weight: '0.20' },
+      { component: 'economic_growth', score: '30.0', weight: '0.15' },
+      { component: 'inflation', score: '40.0', weight: '0.15' },
+      { component: 'employment', score: '29.0', weight: '0.10' },
+      { component: 'trade_balance', score: '30.0', weight: '0.05' },
+      { component: 'political_stability', score: '72.0', weight: '0.05' },
+    ],
+  },
+};
+
+export const USD_TREND: FundamentalTrend = {
+  asset_code: 'USD',
+  current_score: '78.0',
+  change_4_week: '5.0',
+  change_12_week: '12.0',
+  change_26_week: '20.0',
+  consecutive_weeks: 3,
+  direction: 'improving',
+};
+
+export const DIVERGENCE_ALERTS: DivergenceAlert[] = [
   {
-    id: 'news-001',
-    source: 'forex_factory',
-    source_event_id: 'ff-nfp-2026-06-05',
-    event_at: '2026-06-05T12:30:00Z',
-    currency: 'USD',
-    impact: 'high',
-    name: 'Non-Farm Payrolls',
-    description: 'Monthly change in employed people, excluding farming, government and private households.',
+    id: 'divergence-001',
+    asset_code: 'EUR',
+    pair_code: 'EURUSD',
+    divergence_type: 'fundamental_vs_cot',
+    severity: 'high',
+    fundamental_bias: 'bearish',
+    cot_bias: 'bullish',
+    magnitude: '22.0',
+    message:
+      'Divergence — institutions are positioned against the fundamentals. Either fundamentals will deteriorate or institutions get wrong-footed. Reduce size or wait for a COT reversal.',
+    detected_date: '2026-05-27',
+    resolved_date: null,
   },
   {
-    id: 'news-002',
-    source: 'forex_factory',
-    source_event_id: 'ff-fomc-2026-06-12',
-    event_at: '2026-06-12T18:00:00Z',
-    currency: 'USD',
-    impact: 'high',
-    name: 'FOMC Statement',
-    description: 'Federal Open Market Committee rate decision and statement.',
-  },
-  {
-    id: 'news-003',
-    source: 'forex_factory',
-    source_event_id: 'ff-ecb-2026-06-06',
-    event_at: '2026-06-06T11:45:00Z',
-    currency: 'EUR',
-    impact: 'high',
-    name: 'ECB Main Refinancing Rate',
-    description: 'European Central Bank interest rate decision.',
-  },
-  {
-    id: 'news-004',
-    source: 'forex_factory',
-    source_event_id: 'ff-cpi-2026-06-10',
-    event_at: '2026-06-10T12:30:00Z',
-    currency: 'USD',
-    impact: 'high',
-    name: 'Core CPI m/m',
-    description: 'Change in price of goods and services purchased by consumers, excluding food and energy.',
+    id: 'divergence-002',
+    asset_code: 'AUD',
+    pair_code: 'AUDUSD',
+    divergence_type: 'fundamental_vs_cot',
+    severity: 'medium',
+    fundamental_bias: 'bullish',
+    cot_bias: 'bearish',
+    magnitude: '12.0',
+    message:
+      'Divergence — fundamentals improving but COT still net short. Watch for a COT reversal.',
+    detected_date: '2026-05-27',
+    resolved_date: null,
   },
 ];
-
-export const CURRENT_BLACKOUT_CHECK: BlackoutCheck = {
-  pair_code: 'EURUSD',
-  evaluated_at: new Date().toISOString(),
-  in_blackout: false,
-  minutes_until_event: null,
-  minutes_since_event: null,
-  triggering_event: null,
-};
 
 export const CURRENT_WEEK_STORY: WeeklyStory = {
   pair_code: 'EURUSD',
   report_date: '2026-05-26',
+  chapter_0_text:
+    'Macro backdrop: the USD carries the strongest fundamental score (78, STRONGLY BULLISH) on a hawkish Fed and firm growth, while the EUR sits at 35 (BEARISH) as the ECB leans dovish. The 43-point USD/EUR strength gap frames EUR/USD downside — note this diverges from the current bullish COT positioning.',
   chapter_1_text:
     'The 2026-05-26 COT report shows EUR/USD bias is STRONGLY BULLISH. Asset Managers continue accumulating with the eighth consecutive week of net-long expansion. Leveraged Funds joined the long side at extreme levels (COT Index 92.5), confirming institutional conviction across categories. Cross-report rotation with DXY is confirmed.',
   chapter_2_text: null,

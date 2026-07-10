@@ -35,7 +35,7 @@ interface SearchModalProps {
 export function SearchModal({ open, onClose }: SearchModalProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const allResults = useMemo(buildSearchIndex, []);
+  const allResults = useMemo(() => buildSearchIndex(), []);
 
   useEffect(() => {
     if (!open) return;
@@ -202,7 +202,7 @@ function buildSearchIndex(): SearchResult[] {
     { href: '/setups/new', title: 'New setup', subtitle: 'Score a new trade setup' },
     { href: '/liquidity/new', title: 'New liquidity pool', subtitle: 'Mark a liquidity pool' },
     { href: '/journal/stats', title: 'Performance stats', subtitle: 'Win rate and R-multiple analytics' },
-    { href: '/news', title: 'News risk', subtitle: 'Upcoming high-impact events' },
+    { href: '/fundamentals', title: 'Fundamentals', subtitle: 'Currency strength and divergences' },
     { href: '/calculators', title: 'Calculators', subtitle: 'Position size and Fibonacci levels' },
     { href: '/settings', title: 'Settings', subtitle: 'Profile and notifications' },
   ];

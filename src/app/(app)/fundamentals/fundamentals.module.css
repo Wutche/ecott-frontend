@@ -1,0 +1,180 @@
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.matrixHead,
+.matrixRow {
+  display: grid;
+  grid-template-columns: 56px 96px 72px 1fr 140px;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.matrixHead {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.matrixRow {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.12s ease;
+}
+
+.matrixRow:last-child {
+  border-bottom: none;
+}
+
+.matrixRow:hover {
+  background-color: var(--bg-body);
+}
+
+.rank {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.currencyCode {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.scoreValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.strengthCell {
+  min-width: 0;
+}
+
+.strengthTrack {
+  display: block;
+  width: 100%;
+  height: 6px;
+  background-color: var(--bg-body);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.strengthFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .twoColumn {
+    grid-template-columns: 1fr;
+  }
+
+  .matrixHead,
+  .matrixRow {
+    grid-template-columns: 40px 72px 60px 1fr 120px;
+    gap: 0.625rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+.ideaList,
+.divergenceList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.ideaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ideaRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ideaRow:first-child {
+  padding-top: 0;
+}
+
+.ideaPair {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ideaLong {
+  color: var(--color-success);
+}
+
+.ideaShort {
+  color: var(--color-danger);
+}
+
+.ideaSlash {
+  color: var(--color-text-muted);
+}
+
+.ideaGap {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.divergenceRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.divergenceRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.divergenceRow:first-child {
+  padding-top: 0;
+}
+
+.divergenceHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.divergenceMeta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.divergenceBody {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
