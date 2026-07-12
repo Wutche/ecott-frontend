@@ -1,6 +1,6 @@
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { StatTile } from '@/components/ui/StatTile';
+import { PositionSizeCalculator } from './PositionSizeCalculator';
 import styles from './calculators.module.css';
 
 export default function CalculatorsPage() {
@@ -8,48 +8,28 @@ export default function CalculatorsPage() {
     <>
       <PageHeader
         title="Calculators"
-        subtitle="Stateless tools for position sizing and Fibonacci levels."
+        subtitle="Instrument-aware position sizing with risk management, plus Fibonacci levels."
       />
 
-      <div className={styles.twoColumn}>
-        <Card>
-          <CardHeader
-            title="Position size"
-            subtitle="Lot size and dollar risk for a given account and stop distance."
-          />
-          <form className={styles.form}>
-            <Field label="Account balance (USD)">
-              <input className={styles.input} placeholder="10000.00" />
-            </Field>
-            <Field label="Risk percentage">
-              <input className={styles.input} placeholder="0.01" />
-            </Field>
-            <Field label="Stop distance (pips)">
-              <input className={styles.input} placeholder="30" />
-            </Field>
-            <button type="submit" className="btn-primary">
-              Calculate
-            </button>
-          </form>
+      <section className={styles.section}>
+        <PositionSizeCalculator />
+      </section>
 
-          <div className={styles.previewRow}>
-            <StatTile label="Lot size" value="—" />
-            <StatTile label="Risk amount" value="—" />
-          </div>
-        </Card>
-
+      <section className={styles.section}>
         <Card>
           <CardHeader
             title="Fibonacci levels"
             subtitle="Common retracement and extension levels off a swing range."
           />
           <form className={styles.form}>
-            <Field label="Swing high">
-              <input className={styles.input} placeholder="1.16200" />
-            </Field>
-            <Field label="Swing low">
-              <input className={styles.input} placeholder="1.13900" />
-            </Field>
+            <div className={styles.fieldRow}>
+              <Field label="Swing high">
+                <input className={styles.input} placeholder="1.16200" />
+              </Field>
+              <Field label="Swing low">
+                <input className={styles.input} placeholder="1.13900" />
+              </Field>
+            </div>
             <Field label="Direction">
               <div className={styles.toggleGroup}>
                 <button type="button" className={`${styles.toggle} ${styles.toggleActive}`}>
@@ -60,12 +40,9 @@ export default function CalculatorsPage() {
                 </button>
               </div>
             </Field>
-            <button type="submit" className="btn-primary">
-              Calculate
-            </button>
           </form>
         </Card>
-      </div>
+      </section>
     </>
   );
 }
