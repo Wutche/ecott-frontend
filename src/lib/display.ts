@@ -1,15 +1,19 @@
 import type {
   AlertSeverity,
   AlertType,
+  AssetClass,
   BiasDirection,
   BiasStrength,
   CentralBankStance,
+  CommercialSpeculatorSignal,
+  CommodityPhase,
   CurrencyPair,
   DivergenceSeverity,
   DivergenceType,
   FundamentalBias,
   FundamentalPhase,
   FundamentalTrendDirection,
+  HedgeRatioSignal,
   LiquidityPoolClassification,
   LiquidityPoolKind,
   LiquidityPoolType,
@@ -17,6 +21,7 @@ import type {
   LiquidityTimeframe,
   Phase,
   PhaseConfidence,
+  RiskRegime,
   SetupClassification,
   SetupModel,
   SetupStatus,
@@ -289,6 +294,92 @@ export function alertSeverityTone(severity: AlertSeverity): StatusTone {
   if (severity === 'critical') return 'danger';
   if (severity === 'notable') return 'warning';
   return 'info';
+}
+
+// --- Commodities & Indices ---
+
+export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
+  currency: 'Currencies',
+  commodity: 'Commodities',
+  index: 'Indices',
+};
+
+export const MARKET_NAME_LABELS: Record<string, string> = {
+  GOLD: 'Gold',
+  CRUDE_OIL: 'Crude Oil',
+  SILVER: 'Silver',
+  COPPER: 'Copper',
+  SP500: 'S&P 500',
+  NASDAQ100: 'Nasdaq 100',
+  VIX: 'VIX',
+};
+
+export const COMMODITY_PHASE_LABELS: Record<CommodityPhase, string> = {
+  capitulation: 'Capitulation',
+  accumulation: 'Accumulation',
+  trend: 'Trend',
+  maturity: 'Maturity',
+  distribution: 'Distribution',
+  decline: 'Decline',
+};
+
+export const HEDGE_RATIO_LABELS: Record<HedgeRatioSignal, string> = {
+  under_hedged_bullish: 'Under-hedged · Bullish',
+  normal_neutral: 'Normal · Neutral',
+  heavily_hedged_bearish: 'Heavily hedged · Bearish',
+  extreme_hedged_strong_bearish: 'Extreme hedging · Strong bearish',
+};
+
+export const COMMERCIAL_SPECULATOR_LABELS: Record<CommercialSpeculatorSignal, string> = {
+  aligned: 'Aligned',
+  divergent_commercials_bullish: 'Divergent · Commercials bullish',
+  divergent_commercials_bearish: 'Divergent · Commercials bearish',
+};
+
+export const RISK_REGIME_LABELS: Record<RiskRegime, string> = {
+  risk_on: 'Risk-On',
+  neutral: 'Neutral',
+  risk_off: 'Risk-Off',
+};
+
+export const DISAGGREGATED_CATEGORY_LABELS: Record<string, string> = {
+  producer_merchant: 'Producer / Merchant',
+  swap_dealer: 'Swap Dealers',
+  managed_money: 'Managed Money',
+  other_reportable: 'Other Reportables',
+  non_reportable: 'Non-Reportables',
+};
+
+export function commodityPhaseTone(phase: CommodityPhase | null): StatusTone {
+  if (phase === 'accumulation' || phase === 'trend') return 'success';
+  if (phase === 'distribution' || phase === 'decline') return 'danger';
+  if (phase === 'maturity') return 'warning';
+  return 'neutral';
+}
+
+export function hedgeRatioTone(signal: HedgeRatioSignal): StatusTone {
+  if (signal === 'under_hedged_bullish') return 'success';
+  if (signal === 'heavily_hedged_bearish') return 'warning';
+  if (signal === 'extreme_hedged_strong_bearish') return 'danger';
+  return 'neutral';
+}
+
+export function commercialSpeculatorTone(signal: CommercialSpeculatorSignal): StatusTone {
+  if (signal === 'divergent_commercials_bullish') return 'success';
+  if (signal === 'divergent_commercials_bearish') return 'danger';
+  return 'neutral';
+}
+
+export function riskRegimeTone(regime: RiskRegime): StatusTone {
+  if (regime === 'risk_on') return 'success';
+  if (regime === 'risk_off') return 'danger';
+  return 'neutral';
+}
+
+export function netPositionTone(net: number): StatusTone {
+  if (net > 0) return 'success';
+  if (net < 0) return 'danger';
+  return 'neutral';
 }
 
 const SECONDS_PER_MINUTE = 60;

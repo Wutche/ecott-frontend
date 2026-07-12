@@ -9,6 +9,7 @@ import {
   CURRENT_USER_PROFILE,
   DIVERGENCE_ALERTS,
   PRIMARY_WATCHLIST,
+  RISK_SENTIMENT,
 } from '@/lib/fixtures';
 import {
   ALERT_TYPE_LABELS,
@@ -17,12 +18,15 @@ import {
   CURRENCY_PAIR_LABELS,
   DIVERGENCE_TYPE_LABELS,
   PHASE_LABELS,
+  RISK_REGIME_LABELS,
+  STATUS_TONE_TO_CSS_VAR,
   alertSeverityTone,
   biasDirectionTone,
   divergenceSeverityTone,
   formatDate,
   formatPercentage,
   formatRelativeTime,
+  riskRegimeTone,
 } from '@/lib/display';
 import styles from './dashboard.module.css';
 
@@ -42,6 +46,30 @@ export default function DashboardPage() {
           </Link>
         }
       />
+
+      <section className={styles.section}>
+        <Link href="/markets" className={styles.riskBanner}>
+          <div className={styles.riskBannerHead}>
+            <span className={styles.riskBannerLabel}>Risk Sentiment Composite</span>
+            <Badge tone={riskRegimeTone(RISK_SENTIMENT.regime)} variant="soft">
+              {RISK_REGIME_LABELS[RISK_SENTIMENT.regime]}
+            </Badge>
+          </div>
+          <div className={styles.riskBannerBody}>
+            <span className={styles.riskBannerScore}>{RISK_SENTIMENT.score}</span>
+            <span className={styles.riskBannerTrack}>
+              <span
+                className={styles.riskBannerFill}
+                style={{
+                  width: `${Number(RISK_SENTIMENT.score)}%`,
+                  backgroundColor: STATUS_TONE_TO_CSS_VAR[riskRegimeTone(RISK_SENTIMENT.regime)],
+                }}
+              />
+            </span>
+            <span className={styles.riskBannerLink}>Open markets →</span>
+          </div>
+        </Link>
+      </section>
 
       <section className={styles.section}>
         <Card padded={false}>

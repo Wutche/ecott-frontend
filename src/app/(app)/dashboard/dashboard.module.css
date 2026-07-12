@@ -266,3 +266,67 @@
   color: var(--color-success);
   font-weight: 600;
 }
+
+.riskBanner {
+  display: block;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.12s ease;
+}
+
+.riskBanner:hover {
+  border-color: var(--color-accent-primary);
+}
+
+.riskBannerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.riskBannerLabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.riskBannerBody {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.riskBannerScore {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.riskBannerTrack {
+  flex: 1;
+  height: 8px;
+  background-color: var(--bg-body);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.riskBannerFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.riskBannerLink {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-accent-primary);
+  white-space: nowrap;
+}

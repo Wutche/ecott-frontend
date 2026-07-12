@@ -339,6 +339,141 @@ export interface CentralBankStanceRecord {
   updated_at: string;
 }
 
+// --- Commodities & Indices (Phase 12) ---
+
+export type AssetClass = 'currency' | 'commodity' | 'index';
+
+export type CotReportType = 'tff' | 'disaggregated';
+
+export type MarketCode =
+  | 'GOLD'
+  | 'CRUDE_OIL'
+  | 'SILVER'
+  | 'COPPER'
+  | 'SP500'
+  | 'NASDAQ100'
+  | 'VIX';
+
+export type CommodityPhase =
+  | 'capitulation'
+  | 'accumulation'
+  | 'trend'
+  | 'maturity'
+  | 'distribution'
+  | 'decline';
+
+export type HedgeRatioSignal =
+  | 'under_hedged_bullish'
+  | 'normal_neutral'
+  | 'heavily_hedged_bearish'
+  | 'extreme_hedged_strong_bearish';
+
+export type CommercialSpeculatorSignal =
+  | 'aligned'
+  | 'divergent_commercials_bullish'
+  | 'divergent_commercials_bearish';
+
+export type RiskRegime = 'risk_on' | 'neutral' | 'risk_off';
+
+export interface MarketDefinition {
+  market_code: MarketCode;
+  market_name: string;
+  asset_class: AssetClass;
+  report_type: CotReportType;
+  cftc_code: string;
+  contract_size: string | null;
+  primary_correlation_currency: string | null;
+  correlation_strength: string | null;
+}
+
+export interface DisaggregatedCategory {
+  category: string;
+  long_contracts: number;
+  short_contracts: number;
+  net_contracts: number;
+}
+
+export interface CommodityCotReport {
+  market_code: MarketCode;
+  report_date: string;
+  open_interest: number;
+  open_interest_total_change: number;
+  categories: DisaggregatedCategory[];
+}
+
+export interface HedgeRatio {
+  hedge_ratio_percentage: string;
+  signal: HedgeRatioSignal;
+}
+
+export interface CommercialSpeculator {
+  commercial_net: number;
+  speculator_net: number;
+  is_divergent: boolean;
+  signal: CommercialSpeculatorSignal;
+}
+
+export interface CommodityAnalysis {
+  report: CommodityCotReport;
+  hedge_ratio: HedgeRatio;
+  commercial_speculator: CommercialSpeculator;
+  phase: CommodityPhase | null;
+  producer_net: number;
+  managed_money_net: number;
+}
+
+export interface CommodityHistoryPoint {
+  report_date: string;
+  producer_net: number;
+  managed_money_net: number;
+  open_interest: number;
+}
+
+export interface IndexReport {
+  market_code: MarketCode;
+  report_date: string;
+  leveraged_funds_net: number;
+  asset_manager_net: number;
+  dealer_net: number;
+  open_interest: number;
+  open_interest_total_change: number;
+}
+
+export interface RiskSentimentComponent {
+  name: string;
+  net_position: number;
+  component_score: string;
+  weight: string;
+}
+
+export interface RiskSentiment {
+  score_date: string;
+  score: string;
+  regime: RiskRegime;
+  components: RiskSentimentComponent[];
+}
+
+export interface CommodityBiasSummary {
+  market_code: MarketCode;
+  market_name: string;
+  phase: CommodityPhase | null;
+  hedge_signal: HedgeRatioSignal;
+  producer_net: number;
+  managed_money_net: number;
+}
+
+export interface IndexBiasSummary {
+  market_code: MarketCode;
+  market_name: string;
+  leveraged_funds_net: number;
+}
+
+export interface MultiAssetOverview {
+  risk_sentiment: RiskSentiment | null;
+  commodities: CommodityBiasSummary[];
+  indices: IndexBiasSummary[];
+}
+
 export interface WeeklyStory {
   pair_code: CurrencyPair;
   report_date: string;

@@ -1,11 +1,18 @@
 import type {
   Alert,
+  CommodityAnalysis,
+  CommodityHistoryPoint,
   CurrencyStrengthMatrix,
   DivergenceAlert,
   FundamentalScore,
   FundamentalTrend,
+  IndexReport,
   LiquidityPool,
+  MarketCode,
+  MarketDefinition,
+  MultiAssetOverview,
   PerformanceStats,
+  RiskSentiment,
   TradeJournalEntry,
   UserProfile,
   UserSetup,
@@ -617,4 +624,250 @@ export const CURRENT_WEEK_STORY: WeeklyStory = {
   chapter_4_text: null,
   chapter_5_text: null,
   updated_at: '2026-05-26T20:00:00Z',
+};
+
+// --- Commodities & Indices (Phase 12) — temporary until backend is hosted ---
+
+export const MARKET_DEFINITIONS: MarketDefinition[] = [
+  {
+    market_code: 'GOLD',
+    market_name: 'Gold',
+    asset_class: 'commodity',
+    report_type: 'disaggregated',
+    cftc_code: '088691',
+    contract_size: '100 troy oz',
+    primary_correlation_currency: 'USD',
+    correlation_strength: '-0.78',
+  },
+  {
+    market_code: 'CRUDE_OIL',
+    market_name: 'Crude Oil (WTI)',
+    asset_class: 'commodity',
+    report_type: 'disaggregated',
+    cftc_code: '067651',
+    contract_size: '1,000 barrels',
+    primary_correlation_currency: 'CAD',
+    correlation_strength: '-0.80',
+  },
+  {
+    market_code: 'SILVER',
+    market_name: 'Silver',
+    asset_class: 'commodity',
+    report_type: 'disaggregated',
+    cftc_code: '084691',
+    contract_size: '5,000 troy oz',
+    primary_correlation_currency: 'USD',
+    correlation_strength: '-0.65',
+  },
+  {
+    market_code: 'COPPER',
+    market_name: 'Copper',
+    asset_class: 'commodity',
+    report_type: 'disaggregated',
+    cftc_code: '085692',
+    contract_size: '25,000 lbs',
+    primary_correlation_currency: 'AUD',
+    correlation_strength: '0.78',
+  },
+  {
+    market_code: 'SP500',
+    market_name: 'S&P 500 E-mini',
+    asset_class: 'index',
+    report_type: 'tff',
+    cftc_code: '13874A',
+    contract_size: '$50 x index',
+    primary_correlation_currency: null,
+    correlation_strength: null,
+  },
+  {
+    market_code: 'NASDAQ100',
+    market_name: 'Nasdaq 100 E-mini',
+    asset_class: 'index',
+    report_type: 'tff',
+    cftc_code: '20974A',
+    contract_size: '$20 x index',
+    primary_correlation_currency: null,
+    correlation_strength: null,
+  },
+  {
+    market_code: 'VIX',
+    market_name: 'VIX Futures',
+    asset_class: 'index',
+    report_type: 'tff',
+    cftc_code: '1170E1',
+    contract_size: '$1,000 x index',
+    primary_correlation_currency: null,
+    correlation_strength: null,
+  },
+];
+
+export const COMMODITY_ANALYSES: Record<string, CommodityAnalysis> = {
+  GOLD: {
+    report: {
+      market_code: 'GOLD',
+      report_date: '2026-05-26',
+      open_interest: 520000,
+      open_interest_total_change: 6000,
+      categories: [
+        { category: 'producer_merchant', long_contracts: 120000, short_contracts: 245000, net_contracts: -125000 },
+        { category: 'swap_dealer', long_contracts: 90000, short_contracts: 40000, net_contracts: 50000 },
+        { category: 'managed_money', long_contracts: 180000, short_contracts: 60000, net_contracts: 120000 },
+        { category: 'other_reportable', long_contracts: 30000, short_contracts: 25000, net_contracts: 5000 },
+        { category: 'non_reportable', long_contracts: 20000, short_contracts: 30000, net_contracts: -10000 },
+      ],
+    },
+    hedge_ratio: { hedge_ratio_percentage: '5.4', signal: 'under_hedged_bullish' },
+    commercial_speculator: {
+      commercial_net: -75000,
+      speculator_net: 120000,
+      is_divergent: true,
+      signal: 'divergent_commercials_bullish',
+    },
+    phase: 'trend',
+    producer_net: -125000,
+    managed_money_net: 120000,
+  },
+  CRUDE_OIL: {
+    report: {
+      market_code: 'CRUDE_OIL',
+      report_date: '2026-05-26',
+      open_interest: 1700000,
+      open_interest_total_change: 12000,
+      categories: [
+        { category: 'producer_merchant', long_contracts: 200000, short_contracts: 520000, net_contracts: -320000 },
+        { category: 'swap_dealer', long_contracts: 240000, short_contracts: 90000, net_contracts: 150000 },
+        { category: 'managed_money', long_contracts: 300000, short_contracts: 120000, net_contracts: 180000 },
+        { category: 'other_reportable', long_contracts: 70000, short_contracts: 60000, net_contracts: 10000 },
+        { category: 'non_reportable', long_contracts: 40000, short_contracts: 60000, net_contracts: -20000 },
+      ],
+    },
+    hedge_ratio: { hedge_ratio_percentage: '7.6', signal: 'under_hedged_bullish' },
+    commercial_speculator: {
+      commercial_net: -170000,
+      speculator_net: 180000,
+      is_divergent: true,
+      signal: 'divergent_commercials_bullish',
+    },
+    phase: 'trend',
+    producer_net: -320000,
+    managed_money_net: 180000,
+  },
+  SILVER: {
+    report: {
+      market_code: 'SILVER',
+      report_date: '2026-05-26',
+      open_interest: 150000,
+      open_interest_total_change: 2000,
+      categories: [
+        { category: 'producer_merchant', long_contracts: 22000, short_contracts: 58000, net_contracts: -36000 },
+        { category: 'swap_dealer', long_contracts: 18000, short_contracts: 9000, net_contracts: 9000 },
+        { category: 'managed_money', long_contracts: 40000, short_contracts: 20000, net_contracts: 20000 },
+        { category: 'other_reportable', long_contracts: 9000, short_contracts: 7000, net_contracts: 2000 },
+        { category: 'non_reportable', long_contracts: 8000, short_contracts: 6000, net_contracts: 2000 },
+      ],
+    },
+    hedge_ratio: { hedge_ratio_percentage: '6.4', signal: 'under_hedged_bullish' },
+    commercial_speculator: {
+      commercial_net: -27000,
+      speculator_net: 20000,
+      is_divergent: false,
+      signal: 'aligned',
+    },
+    phase: 'trend',
+    producer_net: -36000,
+    managed_money_net: 20000,
+  },
+  COPPER: {
+    report: {
+      market_code: 'COPPER',
+      report_date: '2026-05-26',
+      open_interest: 250000,
+      open_interest_total_change: -3000,
+      categories: [
+        { category: 'producer_merchant', long_contracts: 60000, short_contracts: 95000, net_contracts: -35000 },
+        { category: 'swap_dealer', long_contracts: 40000, short_contracts: 30000, net_contracts: 10000 },
+        { category: 'managed_money', long_contracts: 70000, short_contracts: 90000, net_contracts: -20000 },
+        { category: 'other_reportable', long_contracts: 20000, short_contracts: 18000, net_contracts: 2000 },
+        { category: 'non_reportable', long_contracts: 15000, short_contracts: 14000, net_contracts: 1000 },
+      ],
+    },
+    hedge_ratio: { hedge_ratio_percentage: '8.6', signal: 'under_hedged_bullish' },
+    commercial_speculator: {
+      commercial_net: -25000,
+      speculator_net: -20000,
+      is_divergent: false,
+      signal: 'aligned',
+    },
+    phase: 'capitulation',
+    producer_net: -35000,
+    managed_money_net: -20000,
+  },
+};
+
+export const GOLD_HISTORY: CommodityHistoryPoint[] = [
+  { report_date: '2026-05-12', producer_net: -109000, managed_money_net: 96000, open_interest: 520000 },
+  { report_date: '2026-05-19', producer_net: -117000, managed_money_net: 108000, open_interest: 520000 },
+  { report_date: '2026-05-26', producer_net: -125000, managed_money_net: 120000, open_interest: 520000 },
+];
+
+export const INDEX_REPORTS: Record<string, IndexReport> = {
+  SP500: {
+    market_code: 'SP500',
+    report_date: '2026-05-26',
+    leveraged_funds_net: 120000,
+    asset_manager_net: 250000,
+    dealer_net: -370000,
+    open_interest: 2400000,
+    open_interest_total_change: 20000,
+  },
+  NASDAQ100: {
+    market_code: 'NASDAQ100',
+    report_date: '2026-05-26',
+    leveraged_funds_net: 45000,
+    asset_manager_net: 60000,
+    dealer_net: -105000,
+    open_interest: 260000,
+    open_interest_total_change: 3000,
+  },
+  VIX: {
+    market_code: 'VIX',
+    report_date: '2026-05-26',
+    leveraged_funds_net: -40000,
+    asset_manager_net: 15000,
+    dealer_net: 25000,
+    open_interest: 320000,
+    open_interest_total_change: -4000,
+  },
+};
+
+export const RISK_SENTIMENT: RiskSentiment = {
+  score_date: '2026-05-26',
+  score: '64.2',
+  regime: 'neutral',
+  components: [
+    { name: 'sp500_managed_money', net_position: 120000, component_score: '100.0', weight: '0.35' },
+    { name: 'vix_managed_money', net_position: -40000, component_score: '76.7', weight: '0.25' },
+    { name: 'gold_managed_money', net_position: 120000, component_score: '0.0', weight: '0.20' },
+    { name: 'jpy_leveraged_funds', net_position: -50000, component_score: '83.3', weight: '0.20' },
+  ],
+};
+
+export const MULTI_ASSET_OVERVIEW: MultiAssetOverview = {
+  risk_sentiment: RISK_SENTIMENT,
+  commodities: (['GOLD', 'CRUDE_OIL', 'SILVER', 'COPPER'] as MarketCode[]).map((code) => {
+    const analysis = COMMODITY_ANALYSES[code];
+    return {
+      market_code: code,
+      market_name: MARKET_DEFINITIONS.find((market) => market.market_code === code)!.market_name,
+      phase: analysis.phase,
+      hedge_signal: analysis.hedge_ratio.signal,
+      producer_net: analysis.producer_net,
+      managed_money_net: analysis.managed_money_net,
+    };
+  }),
+  indices: (['SP500', 'NASDAQ100', 'VIX'] as MarketCode[]).map((code) => ({
+    market_code: code,
+    market_name: MARKET_DEFINITIONS.find((market) => market.market_code === code)!.market_name,
+    leveraged_funds_net: INDEX_REPORTS[code].leveraged_funds_net,
+  })),
 };

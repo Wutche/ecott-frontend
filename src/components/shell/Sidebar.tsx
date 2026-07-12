@@ -29,6 +29,7 @@ const NAVIGATION_SECTIONS: NavigationSection[] = [
     label: 'Review',
     links: [
       { href: '/fundamentals', label: 'Fundamentals', icon: '◉' },
+      { href: '/markets', label: 'Markets', icon: '◈' },
       { href: '/journal', label: 'Trade journal', icon: '✎' },
       { href: '/story', label: 'Weekly story', icon: '☷' },
     ],
