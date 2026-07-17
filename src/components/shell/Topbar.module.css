@@ -126,3 +126,21 @@
 .avatar:hover {
   background-color: var(--color-accent-hover);
 }
+
+.signOutButton {
+  height: 36px;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.signOutButton:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-text-muted);
+}

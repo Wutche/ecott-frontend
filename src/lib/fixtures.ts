@@ -29,6 +29,9 @@ export const CURRENT_USER_PROFILE: UserProfile = {
   preferred_pairs: ['EURUSD', 'GBPUSD', 'USDJPY', 'DXY'],
   timezone: 'America/New_York',
   experience_level: 'intermediate',
+  notification_preferences: {},
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
 };
 
 export const PRIMARY_WATCHLIST: WatchlistDetail = {

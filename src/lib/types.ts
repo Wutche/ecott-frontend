@@ -108,6 +108,9 @@ export interface UserProfile {
   preferred_pairs: CurrencyPair[];
   timezone: string;
   experience_level: ExperienceLevel | null;
+  notification_preferences: Record<string, boolean>;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ConfluenceFactor {
@@ -451,6 +454,12 @@ export interface RiskSentiment {
   score: string;
   regime: RiskRegime;
   components: RiskSentimentComponent[];
+}
+
+export interface RiskSentimentHistoryPoint {
+  score_date: string;
+  score: string;
+  regime: RiskRegime;
 }
 
 export interface CommodityBiasSummary {

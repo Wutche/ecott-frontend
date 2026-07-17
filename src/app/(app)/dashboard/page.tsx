@@ -4,13 +4,14 @@ import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
 import {
-  ALERT_INBOX,
-  CURRENCY_STRENGTH_MATRIX,
-  CURRENT_USER_PROFILE,
-  DIVERGENCE_ALERTS,
-  PRIMARY_WATCHLIST,
-  RISK_SENTIMENT,
-} from '@/lib/fixtures';
+  getAlerts,
+  getCurrencyMatrix,
+  getDivergences,
+  getRiskSentiment,
+  getUserProfile,
+  getWatchlist,
+  getWatchlists,
+} from '@/lib/api/endpoints';
 import {
   ALERT_TYPE_LABELS,
   BIAS_DIRECTION_LABELS,
@@ -30,15 +31,25 @@ import {
 } from '@/lib/display';
 import styles from './dashboard.module.css';
 
-export default function DashboardPage() {
-  const unreadAlerts = ALERT_INBOX.filter((alert) => !alert.is_read).slice(0, 4);
-  const topOpportunities = CURRENCY_STRENGTH_MATRIX.best_pair_ideas.slice(0, 3);
-  const activeDivergences = DIVERGENCE_ALERTS.filter((item) => item.resolved_date === null);
+export default async function DashboardPage() {
+  const [profile, riskSentiment, watchlists, alerts, divergences, matrix] = await Promise.all([
+    getUserProfile(),
+    getRiskSentiment(),
+    getWatchlists(),
+    getAlerts(),
+    getDivergences(),
+    getCurrencyMatrix(),
+  ]);
+  const primaryWatchlist = watchlists[0] ? await getWatchlist(watchlists[0].id) : null;
+
+  const unreadAlerts = alerts.filter((alert) => !alert.is_read).slice(0, 4);
+  const topOpportunities = matrix.best_pair_ideas.slice(0, 3);
+  const activeDivergences = divergences.filter((item) => item.resolved_date === null);
 
   return (
     <>
       <PageHeader
-        title={`Welcome back, ${CURRENT_USER_PROFILE.email.split('@')[0]}`}
+        title={`Welcome back, ${profile.email.split('@')[0]}`}
         subtitle="Live read of the institutional positioning on your tracked pairs."
         actions={
           <Link href="/setups/new" className="btn-primary">
@@ -47,93 +58,111 @@ export default function DashboardPage() {
         }
       />
 
-      <section className={styles.section}>
-        <Link href="/markets" className={styles.riskBanner}>
-          <div className={styles.riskBannerHead}>
-            <span className={styles.riskBannerLabel}>Risk Sentiment Composite</span>
-            <Badge tone={riskRegimeTone(RISK_SENTIMENT.regime)} variant="soft">
-              {RISK_REGIME_LABELS[RISK_SENTIMENT.regime]}
-            </Badge>
-          </div>
-          <div className={styles.riskBannerBody}>
-            <span className={styles.riskBannerScore}>{RISK_SENTIMENT.score}</span>
-            <span className={styles.riskBannerTrack}>
-              <span
-                className={styles.riskBannerFill}
-                style={{
-                  width: `${Number(RISK_SENTIMENT.score)}%`,
-                  backgroundColor: STATUS_TONE_TO_CSS_VAR[riskRegimeTone(RISK_SENTIMENT.regime)],
-                }}
-              />
-            </span>
-            <span className={styles.riskBannerLink}>Open markets →</span>
-          </div>
-        </Link>
-      </section>
+      {riskSentiment && (
+        <section className={styles.section}>
+          <Link href="/markets" className={styles.riskBanner}>
+            <div className={styles.riskBannerHead}>
+              <span className={styles.riskBannerLabel}>Risk Sentiment Composite</span>
+              <Badge tone={riskRegimeTone(riskSentiment.regime)} variant="soft">
+                {RISK_REGIME_LABELS[riskSentiment.regime]}
+              </Badge>
+            </div>
+            <div className={styles.riskBannerBody}>
+              <span className={styles.riskBannerScore}>{riskSentiment.score}</span>
+              <span className={styles.riskBannerTrack}>
+                <span
+                  className={styles.riskBannerFill}
+                  style={{
+                    width: `${Number(riskSentiment.score)}%`,
+                    backgroundColor:
+                      STATUS_TONE_TO_CSS_VAR[riskRegimeTone(riskSentiment.regime)],
+                  }}
+                />
+              </span>
+              <span className={styles.riskBannerLink}>Open markets →</span>
+            </div>
+          </Link>
+        </section>
+      )}
 
       <section className={styles.section}>
         <Card padded={false}>
           <div className={styles.watchlistHeader}>
             <div>
-              <h2 className={styles.watchlistTitle}>{PRIMARY_WATCHLIST.name}</h2>
-              <p className={styles.watchlistSubtitle}>{PRIMARY_WATCHLIST.description}</p>
+              <h2 className={styles.watchlistTitle}>
+                {primaryWatchlist?.name ?? 'Your watchlist'}
+              </h2>
+              <p className={styles.watchlistSubtitle}>
+                {primaryWatchlist?.description ?? 'Track institutional positioning on your pairs.'}
+              </p>
             </div>
-            <Link href={`/watchlists/${PRIMARY_WATCHLIST.id}`} className={styles.linkButton}>
-              Open watchlist →
+            <Link href="/watchlists" className={styles.linkButton}>
+              {primaryWatchlist ? 'Open watchlist →' : 'Manage watchlists →'}
             </Link>
           </div>
 
-          <div className={styles.watchlistGrid}>
-            {PRIMARY_WATCHLIST.items.map((item) => (
-              <article key={item.pair_code} className={styles.pairCard}>
-                <header className={styles.pairCardHeader}>
-                  <span className={styles.pairCode}>{CURRENCY_PAIR_LABELS[item.pair_code]}</span>
-                  <Badge tone={biasDirectionTone(item.bias_direction)} variant="solid">
-                    {item.bias_strength && item.bias_direction
-                      ? `${BIAS_STRENGTH_LABELS[item.bias_strength]} ${BIAS_DIRECTION_LABELS[item.bias_direction]}`
-                      : 'Awaiting data'}
-                  </Badge>
-                </header>
+          {!primaryWatchlist || primaryWatchlist.items.length === 0 ? (
+            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+              <EmptyState
+                title="No pairs tracked yet"
+                description="Create a watchlist and add pairs to see their COT bias, phase and setups here."
+              />
+            </div>
+          ) : (
+            <div className={styles.watchlistGrid}>
+              {primaryWatchlist.items.map((item) => (
+                <article key={item.pair_code} className={styles.pairCard}>
+                  <header className={styles.pairCardHeader}>
+                    <span className={styles.pairCode}>{CURRENCY_PAIR_LABELS[item.pair_code]}</span>
+                    <Badge tone={biasDirectionTone(item.bias_direction)} variant="solid">
+                      {item.bias_strength && item.bias_direction
+                        ? `${BIAS_STRENGTH_LABELS[item.bias_strength]} ${BIAS_DIRECTION_LABELS[item.bias_direction]}`
+                        : 'Awaiting data'}
+                    </Badge>
+                  </header>
 
-                <dl className={styles.pairMetrics}>
-                  <div>
-                    <dt>Phase</dt>
-                    <dd>
-                      {item.phase ? PHASE_LABELS[item.phase] : '—'}
-                      {item.phase_confidence_percentage && (
-                        <span className={styles.metricHint}>
-                          {' '}
-                          ({formatPercentage(item.phase_confidence_percentage, 0)})
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>LF COT Index</dt>
-                    <dd>
-                      {item.leveraged_funds_cot_index_value
-                        ? formatPercentage(item.leveraged_funds_cot_index_value, 1)
-                        : '—'}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Active setups</dt>
-                    <dd>{item.active_setup_count}</dd>
-                  </div>
-                  <div>
-                    <dt>Liquidity pools</dt>
-                    <dd>{item.active_liquidity_pool_count}</dd>
-                  </div>
-                </dl>
+                  <dl className={styles.pairMetrics}>
+                    <div>
+                      <dt>Phase</dt>
+                      <dd>
+                        {item.phase ? PHASE_LABELS[item.phase] : '—'}
+                        {item.phase_confidence_percentage && (
+                          <span className={styles.metricHint}>
+                            {' '}
+                            ({formatPercentage(item.phase_confidence_percentage, 0)})
+                          </span>
+                        )}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>LF COT Index</dt>
+                      <dd>
+                        {item.leveraged_funds_cot_index_value
+                          ? formatPercentage(item.leveraged_funds_cot_index_value, 1)
+                          : '—'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Active setups</dt>
+                      <dd>{item.active_setup_count}</dd>
+                    </div>
+                    <div>
+                      <dt>Liquidity pools</dt>
+                      <dd>{item.active_liquidity_pool_count}</dd>
+                    </div>
+                  </dl>
 
-                <footer className={styles.pairFooter}>
-                  <span className={styles.pairFooterText}>
-                    As of {formatDate(item.latest_report_date)}
-                  </span>
-                </footer>
-              </article>
-            ))}
-          </div>
+                  <footer className={styles.pairFooter}>
+                    <span className={styles.pairFooterText}>
+                      {item.latest_report_date
+                        ? `As of ${formatDate(item.latest_report_date)}`
+                        : 'Awaiting first report'}
+                    </span>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          )}
         </Card>
       </section>
 
@@ -205,17 +234,22 @@ export default function DashboardPage() {
                   </li>
                 ))}
               </ul>
-              <div className={styles.opportunityRow}>
-                <span className={styles.opportunityLabel}>Top fundamental pairs</span>
-                <div className={styles.opportunityChips}>
-                  {topOpportunities.map((idea) => (
-                    <span key={`${idea.long_currency_code}${idea.short_currency_code}`} className={styles.opportunityChip}>
-                      {idea.long_currency_code}/{idea.short_currency_code}
-                      <span className={styles.opportunityGap}>+{idea.score_gap}</span>
-                    </span>
-                  ))}
+              {topOpportunities.length > 0 && (
+                <div className={styles.opportunityRow}>
+                  <span className={styles.opportunityLabel}>Top fundamental pairs</span>
+                  <div className={styles.opportunityChips}>
+                    {topOpportunities.map((idea) => (
+                      <span
+                        key={`${idea.long_currency_code}${idea.short_currency_code}`}
+                        className={styles.opportunityChip}
+                      >
+                        {idea.long_currency_code}/{idea.short_currency_code}
+                        <span className={styles.opportunityGap}>+{idea.score_gap}</span>
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </Card>

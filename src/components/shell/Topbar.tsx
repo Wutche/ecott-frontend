@@ -1,15 +1,25 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ALERT_INBOX, CURRENT_USER_PROFILE } from '@/lib/fixtures';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { SearchModal } from './SearchModal';
 import styles from './Topbar.module.css';
 
 export function Topbar() {
+  const router = useRouter();
   const [isSearchOpen, setSearchOpen] = useState(false);
   const unreadAlertCount = ALERT_INBOX.filter((alert) => !alert.is_read).length;
   const userInitial = CURRENT_USER_PROFILE.email.charAt(0).toUpperCase();
+
+  async function handleSignOut() {
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    router.push('/sign-in');
+    router.refresh();
+  }
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -56,6 +66,14 @@ export function Topbar() {
           <Link href="/settings" className={styles.avatar} aria-label="Account settings">
             {userInitial}
           </Link>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className={styles.signOutButton}
+            aria-label="Sign out"
+          >
+            Sign out
+          </button>
         </div>
       </header>
 
