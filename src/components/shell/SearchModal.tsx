@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ACTIVE_SETUPS,
@@ -37,18 +37,24 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const allResults = useMemo(() => buildSearchIndex(), []);
 
+  // Clear the query on close (an event), so reopening starts fresh without
+  // calling setState synchronously inside an effect.
+  const handleClose = useCallback(() => {
+    setQuery('');
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (!open) return;
-    setQuery('');
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault();
-        onClose();
+        handleClose();
       }
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [open, onClose]);
+  }, [open, handleClose]);
 
   if (!open) return null;
 
@@ -64,12 +70,12 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
   const grouped = groupResults(filteredResults);
 
   function navigate(href: string) {
-    onClose();
+    handleClose();
     router.push(href);
   }
 
   return (
-    <div className={styles.backdrop} onClick={onClose} role="presentation">
+    <div className={styles.backdrop} onClick={handleClose} role="presentation">
       <div
         className={styles.modal}
         role="dialog"
