@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { ALL_SETUPS, PERFORMANCE_STATS, TRADE_JOURNAL_ENTRIES } from '@/lib/fixtures';
+import { getJournalEntries, getJournalStats, getSetups } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   TRADE_OUTCOME_LABELS,
@@ -14,8 +14,14 @@ import {
 } from '@/lib/display';
 import styles from './journal.module.css';
 
-export default function JournalIndexPage() {
-  const setupBySetupId = new Map(ALL_SETUPS.map((setup) => [setup.id, setup]));
+export default async function JournalIndexPage() {
+  const [stats, entriesPage, setupsPage] = await Promise.all([
+    getJournalStats(),
+    getJournalEntries(),
+    getSetups(),
+  ]);
+  const setupBySetupId = new Map(setupsPage.items.map((setup) => [setup.id, setup]));
+  const entries = entriesPage.items;
 
   return (
     <>
@@ -32,22 +38,22 @@ export default function JournalIndexPage() {
       <div className={styles.statRow}>
         <StatTile
           label="Total trades"
-          value={PERFORMANCE_STATS.total_trades}
-          hint={`${PERFORMANCE_STATS.wins}W / ${PERFORMANCE_STATS.losses}L / ${PERFORMANCE_STATS.break_evens}BE`}
+          value={stats.total_trades}
+          hint={`${stats.wins}W / ${stats.losses}L / ${stats.break_evens}BE`}
         />
         <StatTile
           label="Win rate"
-          value={formatPercentage(PERFORMANCE_STATS.win_rate_percentage, 1)}
+          value={formatPercentage(stats.win_rate_percentage, 1)}
           tone="success"
         />
         <StatTile
           label="Total R"
-          value={formatRMultiple(PERFORMANCE_STATS.total_r_multiple)}
+          value={formatRMultiple(stats.total_r_multiple)}
           tone="success"
         />
         <StatTile
           label="Avg R"
-          value={formatRMultiple(PERFORMANCE_STATS.average_r_multiple)}
+          value={formatRMultiple(stats.average_r_multiple)}
         />
       </div>
 
@@ -61,7 +67,7 @@ export default function JournalIndexPage() {
             <span>Closed</span>
             <span></span>
           </div>
-          {TRADE_JOURNAL_ENTRIES.map((entry) => {
+          {entries.map((entry) => {
             const setup = setupBySetupId.get(entry.setup_id);
             return (
               <Link

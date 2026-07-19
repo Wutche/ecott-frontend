@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { ALL_SETUPS, TRADE_JOURNAL_ENTRIES } from '@/lib/fixtures';
+import { getJournalEntry, getSetup } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   SETUP_MODEL_LABELS,
@@ -22,9 +22,9 @@ interface RouteProps {
 
 export default async function JournalEntryDetailPage({ params }: RouteProps) {
   const { id } = await params;
-  const entry = TRADE_JOURNAL_ENTRIES.find((row) => row.id === id);
+  const entry = await getJournalEntry(id).catch(() => null);
   if (!entry) notFound();
-  const setup = ALL_SETUPS.find((row) => row.id === entry.setup_id);
+  const setup = await getSetup(entry.setup_id).catch(() => null);
 
   return (
     <>

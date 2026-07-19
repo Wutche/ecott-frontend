@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { ALL_SETUPS } from '@/lib/fixtures';
+import { getSetup } from '@/lib/api/endpoints';
 import {
   CONFLUENCE_FACTOR_LABELS,
   CURRENCY_PAIR_LABELS,
@@ -23,7 +23,7 @@ interface RouteProps {
 
 export default async function SetupDetailPage({ params }: RouteProps) {
   const { id } = await params;
-  const setup = ALL_SETUPS.find((entry) => entry.id === id);
+  const setup = await getSetup(id).catch(() => null);
   if (!setup) notFound();
 
   const isActive = setup.status === 'active';

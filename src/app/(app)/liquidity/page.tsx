@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { LIQUIDITY_POOLS } from '@/lib/fixtures';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { getLiquidityPools } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   LIQUIDITY_POOL_CLASSIFICATION_LABELS,
@@ -14,7 +15,9 @@ import {
 } from '@/lib/display';
 import styles from './liquidity.module.css';
 
-export default function LiquidityPoolsIndexPage() {
+export default async function LiquidityPoolsIndexPage() {
+  const { items: pools } = await getLiquidityPools();
+
   return (
     <>
       <PageHeader
@@ -27,6 +30,14 @@ export default function LiquidityPoolsIndexPage() {
         }
       />
 
+      {pools.length === 0 ? (
+        <Card>
+          <EmptyState
+            title="No liquidity pools yet"
+            description="Mark your first pool to score it against the six-criterion rubric."
+          />
+        </Card>
+      ) : (
       <Card padded={false}>
         <div className={styles.table}>
           <div className={styles.tableHead}>
@@ -38,7 +49,7 @@ export default function LiquidityPoolsIndexPage() {
             <span>Tier</span>
             <span>Created</span>
           </div>
-          {LIQUIDITY_POOLS.map((pool) => (
+          {pools.map((pool) => (
             <Link
               key={pool.id}
               href={`/liquidity/${pool.id}`}
@@ -63,6 +74,7 @@ export default function LiquidityPoolsIndexPage() {
           ))}
         </div>
       </Card>
+      )}
     </>
   );
 }

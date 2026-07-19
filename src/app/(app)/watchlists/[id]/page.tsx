@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { ALL_WATCHLISTS } from '@/lib/fixtures';
+import { getWatchlist } from '@/lib/api/endpoints';
 import {
   BIAS_DIRECTION_LABELS,
   BIAS_STRENGTH_LABELS,
@@ -22,7 +22,7 @@ interface RouteProps {
 
 export default async function WatchlistDetailPage({ params }: RouteProps) {
   const { id } = await params;
-  const watchlist = ALL_WATCHLISTS.find((entry) => entry.id === id);
+  const watchlist = await getWatchlist(id).catch(() => null);
   if (!watchlist) notFound();
 
   return (

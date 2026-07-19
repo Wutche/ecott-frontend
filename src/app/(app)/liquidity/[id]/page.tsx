@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { LIQUIDITY_POOLS } from '@/lib/fixtures';
+import { getLiquidityPool } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   LIQUIDITY_POOL_CLASSIFICATION_LABELS,
@@ -24,7 +24,7 @@ interface RouteProps {
 
 export default async function LiquidityPoolDetailPage({ params }: RouteProps) {
   const { id } = await params;
-  const pool = LIQUIDITY_POOLS.find((row) => row.id === id);
+  const pool = await getLiquidityPool(id).catch(() => null);
   if (!pool) notFound();
 
   return (

@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { CURRENCY_STRENGTH_MATRIX, DIVERGENCE_ALERTS } from '@/lib/fixtures';
+import { getCurrencyMatrix, getDivergences } from '@/lib/api/endpoints';
 import {
   DIVERGENCE_TYPE_LABELS,
   FUNDAMENTAL_BIAS_LABELS,
@@ -15,9 +15,12 @@ import {
 } from '@/lib/display';
 import styles from './fundamentals.module.css';
 
-export default function FundamentalsPage() {
-  const { rankings, best_pair_ideas } = CURRENCY_STRENGTH_MATRIX;
-  const activeDivergences = DIVERGENCE_ALERTS.filter((item) => item.resolved_date === null);
+export default async function FundamentalsPage() {
+  const [{ rankings, best_pair_ideas }, divergences] = await Promise.all([
+    getCurrencyMatrix(),
+    getDivergences(),
+  ]);
+  const activeDivergences = divergences.filter((item) => item.resolved_date === null);
 
   return (
     <>

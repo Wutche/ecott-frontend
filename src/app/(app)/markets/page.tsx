@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { MULTI_ASSET_OVERVIEW } from '@/lib/fixtures';
+import { getCommodityOverview } from '@/lib/api/endpoints';
 import {
   COMMODITY_PHASE_LABELS,
   HEDGE_RATIO_LABELS,
@@ -27,8 +27,8 @@ function formatNet(value: number): string {
   return `${sign}${value.toLocaleString('en-US')}`;
 }
 
-export default function MarketsPage() {
-  const { risk_sentiment, commodities, indices } = MULTI_ASSET_OVERVIEW;
+export default async function MarketsPage() {
+  const { risk_sentiment, commodities, indices } = await getCommodityOverview();
 
   return (
     <>

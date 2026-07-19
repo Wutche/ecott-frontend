@@ -5,10 +5,10 @@ import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
 import {
-  COMMODITY_ANALYSES,
-  INDEX_REPORTS,
-  MARKET_DEFINITIONS,
-} from '@/lib/fixtures';
+  getCommodityAnalysis,
+  getCommodityMarkets,
+  getIndexReport,
+} from '@/lib/api/endpoints';
 import {
   COMMERCIAL_SPECULATOR_LABELS,
   COMMODITY_PHASE_LABELS,
@@ -35,9 +35,12 @@ function formatNet(value: number): string {
 export default async function MarketDetailPage({ params }: RouteProps) {
   const { market } = await params;
   const code = market.toUpperCase();
-  const definition = MARKET_DEFINITIONS.find((item) => item.market_code === code);
-  const commodity = COMMODITY_ANALYSES[code];
-  const index = INDEX_REPORTS[code];
+  const [markets, commodity, index] = await Promise.all([
+    getCommodityMarkets(),
+    getCommodityAnalysis(code),
+    getIndexReport(code),
+  ]);
+  const definition = markets.find((item) => item.market_code === code);
 
   if (!definition || (!commodity && !index)) notFound();
 

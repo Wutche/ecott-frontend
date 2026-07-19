@@ -1,71 +1,58 @@
 import Link from 'next/link';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { ALL_WATCHLISTS } from '@/lib/fixtures';
-import {
-  BIAS_DIRECTION_LABELS,
-  CURRENCY_PAIR_LABELS,
-  biasDirectionTone,
-  formatDate,
-} from '@/lib/display';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { getWatchlists } from '@/lib/api/endpoints';
+import { formatDate } from '@/lib/display';
 import styles from './watchlists.module.css';
 
-export default function WatchlistsIndexPage() {
+export default async function WatchlistsIndexPage() {
+  const watchlists = await getWatchlists();
+
   return (
     <>
       <PageHeader
         title="Watchlists"
         subtitle="Curated lists of pairs with live COT bias, phase, and your active activity."
         actions={
-          <button type="button" className="btn-primary">
+          <Link href="/watchlists/new" className="btn-primary">
             New watchlist
-          </button>
+          </Link>
         }
       />
 
-      <div className={styles.grid}>
-        {ALL_WATCHLISTS.map((watchlist) => (
-          <Link
-            key={watchlist.id}
-            href={`/watchlists/${watchlist.id}`}
-            className={styles.cardLink}
-          >
-            <Card>
-              <header className={styles.cardHeader}>
-                <div>
-                  <h3 className={styles.cardTitle}>{watchlist.name}</h3>
-                  {watchlist.description && (
-                    <p className={styles.cardSubtitle}>{watchlist.description}</p>
-                  )}
-                </div>
-                <span className={styles.itemCount}>
-                  {watchlist.items.length} {watchlist.items.length === 1 ? 'pair' : 'pairs'}
-                </span>
-              </header>
-
-              <ul className={styles.pairList}>
-                {watchlist.items.slice(0, 5).map((item) => (
-                  <li key={item.pair_code} className={styles.pairRow}>
-                    <span className={styles.pairCode}>
-                      {CURRENCY_PAIR_LABELS[item.pair_code]}
-                    </span>
-                    <Badge tone={biasDirectionTone(item.bias_direction)} variant="soft">
-                      {item.bias_direction
-                        ? BIAS_DIRECTION_LABELS[item.bias_direction]
-                        : 'Awaiting data'}
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-
-              <footer className={styles.cardFooter}>
-                <span>Created {formatDate(watchlist.created_at)}</span>
-              </footer>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      {watchlists.length === 0 ? (
+        <Card>
+          <EmptyState
+            title="No watchlists yet"
+            description="Create a watchlist to group the pairs you track with live COT bias and phase."
+          />
+        </Card>
+      ) : (
+        <div className={styles.grid}>
+          {watchlists.map((watchlist) => (
+            <Link
+              key={watchlist.id}
+              href={`/watchlists/${watchlist.id}`}
+              className={styles.cardLink}
+            >
+              <Card>
+                <header className={styles.cardHeader}>
+                  <div>
+                    <h3 className={styles.cardTitle}>{watchlist.name}</h3>
+                    {watchlist.description && (
+                      <p className={styles.cardSubtitle}>{watchlist.description}</p>
+                    )}
+                  </div>
+                </header>
+                <footer className={styles.cardFooter}>
+                  <span>Created {formatDate(watchlist.created_at)}</span>
+                </footer>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
     </>
   );
 }

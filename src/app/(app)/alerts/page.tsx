@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { ALERT_INBOX } from '@/lib/fixtures';
+import { getAlerts } from '@/lib/api/endpoints';
 import {
   ALERT_TYPE_LABELS,
   alertSeverityTone,
@@ -10,14 +10,15 @@ import {
 } from '@/lib/display';
 import styles from './alerts.module.css';
 
-export default function AlertsInboxPage() {
-  const unreadCount = ALERT_INBOX.filter((alert) => !alert.is_read).length;
+export default async function AlertsInboxPage() {
+  const { items: alerts, total } = await getAlerts();
+  const unreadCount = alerts.filter((alert) => !alert.is_read).length;
 
   return (
     <>
       <PageHeader
         title="Alerts inbox"
-        subtitle={`${unreadCount} unread • ${ALERT_INBOX.length} total`}
+        subtitle={`${unreadCount} unread • ${total} total`}
         actions={
           <>
             <button type="button" className={styles.outlineButton}>
@@ -30,7 +31,7 @@ export default function AlertsInboxPage() {
         }
       />
 
-      {ALERT_INBOX.length === 0 ? (
+      {alerts.length === 0 ? (
         <EmptyState
           title="Your inbox is empty"
           description="High-conviction setups, COT phase shifts, and target / stop alerts will land here."
@@ -38,7 +39,7 @@ export default function AlertsInboxPage() {
       ) : (
         <Card padded={false}>
           <ul className={styles.alertList}>
-            {ALERT_INBOX.map((alert) => (
+            {alerts.map((alert) => (
               <li
                 key={alert.id}
                 className={`${styles.alertRow} ${alert.is_read ? styles.read : styles.unread}`}

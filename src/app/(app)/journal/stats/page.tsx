@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { PERFORMANCE_STATS } from '@/lib/fixtures';
+import { getJournalStats } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   SETUP_MODEL_LABELS,
@@ -15,9 +15,10 @@ import {
 import type { CurrencyPair, SetupModel } from '@/lib/types';
 import styles from './stats.module.css';
 
-export default function PerformanceStatsPage() {
-  const streakLabel = PERFORMANCE_STATS.current_streak_outcome
-    ? `${PERFORMANCE_STATS.current_streak_length} × ${TRADE_OUTCOME_LABELS[PERFORMANCE_STATS.current_streak_outcome]}`
+export default async function PerformanceStatsPage() {
+  const stats = await getJournalStats();
+  const streakLabel = stats.current_streak_outcome
+    ? `${stats.current_streak_length} × ${TRADE_OUTCOME_LABELS[stats.current_streak_outcome]}`
     : '—';
 
   return (
@@ -33,44 +34,44 @@ export default function PerformanceStatsPage() {
       />
 
       <div className={styles.statRow}>
-        <StatTile label="Total trades" value={PERFORMANCE_STATS.total_trades} />
+        <StatTile label="Total trades" value={stats.total_trades} />
         <StatTile
           label="Win rate"
-          value={formatPercentage(PERFORMANCE_STATS.win_rate_percentage, 1)}
+          value={formatPercentage(stats.win_rate_percentage, 1)}
           tone="success"
         />
         <StatTile
           label="Expectancy"
-          value={formatRMultiple(PERFORMANCE_STATS.expectancy_r_multiple)}
+          value={formatRMultiple(stats.expectancy_r_multiple)}
           hint="Average R per trade"
         />
         <StatTile
           label="Total R"
-          value={formatRMultiple(PERFORMANCE_STATS.total_r_multiple)}
+          value={formatRMultiple(stats.total_r_multiple)}
           tone="success"
         />
         <StatTile
           label="Largest win"
-          value={formatRMultiple(PERFORMANCE_STATS.largest_win_r_multiple)}
+          value={formatRMultiple(stats.largest_win_r_multiple)}
           tone="success"
         />
         <StatTile
           label="Largest loss"
-          value={formatRMultiple(PERFORMANCE_STATS.largest_loss_r_multiple)}
+          value={formatRMultiple(stats.largest_loss_r_multiple)}
           tone="danger"
         />
         <StatTile
           label="Current streak"
           value={streakLabel}
           tone={
-            PERFORMANCE_STATS.current_streak_outcome
-              ? tradeOutcomeTone(PERFORMANCE_STATS.current_streak_outcome)
+            stats.current_streak_outcome
+              ? tradeOutcomeTone(stats.current_streak_outcome)
               : undefined
           }
         />
         <StatTile
           label="Outcome split"
-          value={`${PERFORMANCE_STATS.wins}W / ${PERFORMANCE_STATS.losses}L / ${PERFORMANCE_STATS.break_evens}BE`}
+          value={`${stats.wins}W / ${stats.losses}L / ${stats.break_evens}BE`}
         />
       </div>
 
@@ -78,7 +79,7 @@ export default function PerformanceStatsPage() {
         <Card padded={false}>
           <CardHeader title="By currency pair" />
           <BreakdownTable
-            rows={Object.entries(PERFORMANCE_STATS.by_pair_code).map(([pairCode, perf]) => ({
+            rows={Object.entries(stats.by_pair_code).map(([pairCode, perf]) => ({
               key: pairCode,
               label: CURRENCY_PAIR_LABELS[pairCode as CurrencyPair] ?? pairCode,
               perf,
@@ -89,7 +90,7 @@ export default function PerformanceStatsPage() {
         <Card padded={false}>
           <CardHeader title="By setup model" />
           <BreakdownTable
-            rows={Object.entries(PERFORMANCE_STATS.by_setup_model).map(([model, perf]) => ({
+            rows={Object.entries(stats.by_setup_model).map(([model, perf]) => ({
               key: model,
               label: SETUP_MODEL_LABELS[model as SetupModel] ?? model,
               perf,

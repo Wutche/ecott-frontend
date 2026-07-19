@@ -75,6 +75,8 @@ export const getRiskSentimentHistory = (weeks: number) =>
 // ----- Journal ------------------------------------------------------------
 export const getJournalEntries = () =>
   apiFetch<Paginated<TradeJournalEntry>>('/api/journal');
+export const getJournalEntry = (id: string) =>
+  apiFetch<TradeJournalEntry>(`/api/journal/${id}`);
 export const getJournalStats = () => apiFetch<PerformanceStats>('/api/journal/stats');
 
 // ----- Story --------------------------------------------------------------

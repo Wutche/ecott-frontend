@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { ACTIVE_SETUPS } from '@/lib/fixtures';
+import { getSetups } from '@/lib/api/endpoints';
 import {
   CURRENCY_PAIR_LABELS,
   SETUP_CLASSIFICATION_LABELS,
@@ -14,7 +15,9 @@ import {
 } from '@/lib/display';
 import styles from './setups.module.css';
 
-export default function SetupsIndexPage() {
+export default async function SetupsIndexPage() {
+  const { items: setups } = await getSetups();
+
   return (
     <>
       <PageHeader
@@ -27,6 +30,14 @@ export default function SetupsIndexPage() {
         }
       />
 
+      {setups.length === 0 ? (
+        <Card>
+          <EmptyState
+            title="No setups yet"
+            description="Score your first trade setup against the confluence rubric to see it here."
+          />
+        </Card>
+      ) : (
       <Card padded={false}>
         <div className={styles.table}>
           <div className={styles.tableHead}>
@@ -39,7 +50,7 @@ export default function SetupsIndexPage() {
             <span>Created</span>
           </div>
 
-          {ACTIVE_SETUPS.map((setup) => (
+          {setups.map((setup) => (
             <Link key={setup.id} href={`/setups/${setup.id}`} className={styles.tableRow}>
               <span className={styles.pairCode}>{CURRENCY_PAIR_LABELS[setup.pair_code]}</span>
               <span>{SETUP_MODEL_LABELS[setup.model]}</span>
@@ -64,6 +75,7 @@ export default function SetupsIndexPage() {
           ))}
         </div>
       </Card>
+      )}
     </>
   );
 }

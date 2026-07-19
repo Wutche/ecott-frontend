@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
-import { FUNDAMENTAL_SCORES, USD_TREND } from '@/lib/fixtures';
+import { getFundamentalScore, getFundamentalTrend } from '@/lib/api/endpoints';
 import {
   FUNDAMENTAL_BIAS_LABELS,
   FUNDAMENTAL_COMPONENT_LABELS,
@@ -24,10 +24,12 @@ interface RouteProps {
 
 export default async function FundamentalDetailPage({ params }: RouteProps) {
   const { currency } = await params;
-  const score = FUNDAMENTAL_SCORES[currency.toUpperCase()];
+  const asset = currency.toUpperCase();
+  const [score, trend] = await Promise.all([
+    getFundamentalScore(asset),
+    getFundamentalTrend(asset),
+  ]);
   if (!score) notFound();
-
-  const trend = USD_TREND.asset_code === score.asset_code ? USD_TREND : null;
 
   return (
     <>
