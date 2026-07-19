@@ -42,7 +42,7 @@ export default async function DashboardPage() {
   ]);
   const primaryWatchlist = watchlists[0] ? await getWatchlist(watchlists[0].id) : null;
 
-  const unreadAlerts = alerts.filter((alert) => !alert.is_read).slice(0, 4);
+  const unreadAlerts = alerts.items.filter((alert) => !alert.is_read).slice(0, 4);
   const topOpportunities = matrix.best_pair_ideas.slice(0, 3);
   const activeDivergences = divergences.filter((item) => item.resolved_date === null);
 

@@ -99,6 +99,14 @@ export type AlertSeverity = 'info' | 'notable' | 'critical';
 
 export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
 
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+  limit: number;
+  next_cursor: string | null;
+  has_more: boolean;
+}
+
 export interface UserProfile {
   id: string;
   email: string;

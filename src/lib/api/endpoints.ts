@@ -16,6 +16,7 @@ import type {
   LiquidityPool,
   MarketDefinition,
   MultiAssetOverview,
+  Paginated,
   PerformanceStats,
   RiskSentiment,
   RiskSentimentHistoryPoint,
@@ -35,11 +36,11 @@ export const getWatchlists = () => apiFetch<Watchlist[]>('/api/watchlists');
 export const getWatchlist = (id: string) => apiFetch<WatchlistDetail>(`/api/watchlists/${id}`);
 
 // ----- Setups -------------------------------------------------------------
-export const getSetups = () => apiFetch<UserSetup[]>('/api/setup');
+export const getSetups = () => apiFetch<Paginated<UserSetup>>('/api/setup');
 export const getSetup = (id: string) => apiFetch<UserSetup>(`/api/setup/${id}`);
 
 // ----- Liquidity ----------------------------------------------------------
-export const getLiquidityPools = () => apiFetch<LiquidityPool[]>('/api/liquidity');
+export const getLiquidityPools = () => apiFetch<Paginated<LiquidityPool>>('/api/liquidity');
 export const getLiquidityPool = (id: string) =>
   apiFetch<LiquidityPool>(`/api/liquidity/${id}`);
 
@@ -72,7 +73,8 @@ export const getRiskSentimentHistory = (weeks: number) =>
   apiFetch<RiskSentimentHistoryPoint[]>(`/api/commodity/risk-sentiment/history/${weeks}`);
 
 // ----- Journal ------------------------------------------------------------
-export const getJournalEntries = () => apiFetch<TradeJournalEntry[]>('/api/journal');
+export const getJournalEntries = () =>
+  apiFetch<Paginated<TradeJournalEntry>>('/api/journal');
 export const getJournalStats = () => apiFetch<PerformanceStats>('/api/journal/stats');
 
 // ----- Story --------------------------------------------------------------
@@ -80,4 +82,4 @@ export const getWeeklyStory = (pair: string, reportDate: string) =>
   apiFetchOrNull<WeeklyStory>(`/api/story/${pair}/${reportDate}`);
 
 // ----- Alerts -------------------------------------------------------------
-export const getAlerts = () => apiFetch<Alert[]>('/api/alerts');
+export const getAlerts = () => apiFetch<Paginated<Alert>>('/api/alerts');
