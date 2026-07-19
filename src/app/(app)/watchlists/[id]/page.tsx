@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { getWatchlist } from '@/lib/api/endpoints';
+import { WatchlistControls } from './WatchlistControls';
 import {
   BIAS_DIRECTION_LABELS,
   BIAS_STRENGTH_LABELS,
@@ -35,9 +36,6 @@ export default async function WatchlistDetailPage({ params }: RouteProps) {
             <Link href="/watchlists" className={styles.linkButton}>
               ← All watchlists
             </Link>
-            <button type="button" className={styles.outlineButton}>
-              Edit pairs
-            </button>
           </>
         }
       />
@@ -113,6 +111,13 @@ export default async function WatchlistDetailPage({ params }: RouteProps) {
           ))}
         </div>
       </section>
+
+      <WatchlistControls
+        id={watchlist.id}
+        name={watchlist.name}
+        description={watchlist.description}
+        pairs={watchlist.items.map((item) => item.pair_code)}
+      />
     </>
   );
 }
