@@ -140,3 +140,5 @@
   gap: 0.75rem;
   padding-top: 0.5rem;
 }
+
+.error { font-size: 0.8125rem; color: var(--color-danger); background-color: color-mix(in srgb, var(--color-danger) 10%, transparent); border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; }

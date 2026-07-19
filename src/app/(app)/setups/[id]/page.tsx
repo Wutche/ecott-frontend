@@ -4,6 +4,7 @@ import { Card, CardHeader } from '@/components/ui/Card';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatTile } from '@/components/ui/StatTile';
 import { getSetup } from '@/lib/api/endpoints';
+import { CloseSetupButton } from './CloseSetupButton';
 import {
   CONFLUENCE_FACTOR_LABELS,
   CURRENCY_PAIR_LABELS,
@@ -38,11 +39,7 @@ export default async function SetupDetailPage({ params }: RouteProps) {
             <Link href="/setups" className={styles.linkButton}>
               ← All setups
             </Link>
-            {isActive && (
-              <button type="button" className="btn-primary">
-                Close setup
-              </button>
-            )}
+            {isActive && <CloseSetupButton setupId={setup.id} />}
           </>
         }
       />
