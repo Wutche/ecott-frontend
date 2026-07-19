@@ -17,7 +17,6 @@ import type {
   UserProfile,
   UserSetup,
   WatchlistDetail,
-  WeeklyStory,
 } from './types';
 
 export const CURRENT_USER_PROFILE: UserProfile = {
@@ -614,20 +613,6 @@ export const DIVERGENCE_ALERTS: DivergenceAlert[] = [
     resolved_date: null,
   },
 ];
-
-export const CURRENT_WEEK_STORY: WeeklyStory = {
-  pair_code: 'EURUSD',
-  report_date: '2026-05-26',
-  chapter_0_text:
-    'Macro backdrop: the USD carries the strongest fundamental score (78, STRONGLY BULLISH) on a hawkish Fed and firm growth, while the EUR sits at 35 (BEARISH) as the ECB leans dovish. The 43-point USD/EUR strength gap frames EUR/USD downside — note this diverges from the current bullish COT positioning.',
-  chapter_1_text:
-    'The 2026-05-26 COT report shows EUR/USD bias is STRONGLY BULLISH. Asset Managers continue accumulating with the eighth consecutive week of net-long expansion. Leveraged Funds joined the long side at extreme levels (COT Index 92.5), confirming institutional conviction across categories. Cross-report rotation with DXY is confirmed.',
-  chapter_2_text: null,
-  chapter_3_text: null,
-  chapter_4_text: null,
-  chapter_5_text: null,
-  updated_at: '2026-05-26T20:00:00Z',
-};
 
 // --- Commodities & Indices (Phase 12) — temporary until backend is hosted ---
 

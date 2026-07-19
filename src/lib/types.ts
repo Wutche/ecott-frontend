@@ -494,11 +494,13 @@ export interface MultiAssetOverview {
 export interface WeeklyStory {
   pair_code: CurrencyPair;
   report_date: string;
-  chapter_0_text: string | null;
-  chapter_1_text: string;
-  chapter_2_text: string | null;
-  chapter_3_text: string | null;
-  chapter_4_text: string | null;
-  chapter_5_text: string | null;
+  chapter_1_institutional_narrative: string;
+  chapter_2_price_structure: string | null;
+  chapter_3_liquidity: string | null;
+  chapter_4_timing: string | null;
+  chapter_5_execution: string | null;
+  is_auto_generated: boolean;
+  edited_at: string | null;
+  created_at: string;
   updated_at: string;
 }
