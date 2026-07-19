@@ -1,17 +1,61 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { StatTile } from '@/components/ui/StatTile';
+import { apiFetchClient } from '@/lib/apiClient';
 import {
   ACCOUNT_CURRENCIES,
   INSTRUMENTS,
-  calculatePositionPlan,
   type AccountCurrency,
   type PositionPlanResult,
+  type SafetyFinding,
 } from '@/lib/positionCalculator';
 import styles from './calculators.module.css';
+
+// Backend /api/calculator/position-plan response (decimals arrive as strings).
+interface PositionPlanApiResponse {
+  blocked: boolean;
+  findings: SafetyFinding[];
+  final_risk_percentage: string;
+  risk_amount: string;
+  stop_pips: string;
+  pip_value_per_standard_lot: string;
+  lot_size: string | null;
+  position_units: string | null;
+  risk_reward_target_1: string | null;
+  risk_reward_target_2: string | null;
+  potential_profit_target_1: string | null;
+  potential_profit_target_2: string | null;
+}
+
+interface OpenRiskResponse {
+  open_position_count: number;
+  total_open_risk_percentage: string;
+  risk_capacity_remaining_percentage: string;
+  max_total_risk_percentage: string;
+  exceeds_cap: boolean;
+}
+
+const num = (value: string | null): number | null => (value === null ? null : Number(value));
+
+function mapResult(r: PositionPlanApiResponse): PositionPlanResult {
+  return {
+    blocked: r.blocked,
+    findings: r.findings,
+    finalRiskPercentage: Number(r.final_risk_percentage),
+    riskAmount: Number(r.risk_amount),
+    stopPips: Number(r.stop_pips),
+    pipValuePerLot: Number(r.pip_value_per_standard_lot),
+    lotSize: num(r.lot_size),
+    positionUnits: num(r.position_units),
+    riskRewardTarget1: num(r.risk_reward_target_1),
+    riskRewardTarget2: num(r.risk_reward_target_2),
+    potentialProfitTarget1: num(r.potential_profit_target_1),
+    potentialProfitTarget2: num(r.potential_profit_target_2),
+  };
+}
 
 function parseNumber(value: string): number | null {
   if (value.trim() === '') return null;
@@ -37,27 +81,60 @@ export function PositionSizeCalculator() {
   const [confluence, setConfluence] = useState('');
   const [phase, setPhase] = useState('');
 
-  const result = useMemo<PositionPlanResult | null>(() => {
-    const accountBalance = parseNumber(balance);
-    const riskFraction = parseNumber(riskPercent);
-    const entryPrice = parseNumber(entry);
-    const stopPrice = parseNumber(stop);
-    if (accountBalance === null || riskFraction === null || entryPrice === null || stopPrice === null) {
-      return null;
-    }
-    return calculatePositionPlan({
-      accountBalance,
-      accountCurrency: currency,
-      riskPercentage: riskFraction / 100,
-      instrumentSymbol: instrument,
-      entryPrice,
-      stopPrice,
-      target1Price: parseNumber(target1),
-      target2Price: parseNumber(target2),
-      confluenceScore: parseNumber(confluence),
-      phase: parseNumber(phase),
-    });
+  const [result, setResult] = useState<PositionPlanResult | null>(null);
+  const [openRisk, setOpenRisk] = useState<OpenRiskResponse | null>(null);
+
+  // Debounced live call to the backend calculator. persist:false keeps the
+  // audit trail meaningful (deliberate calculations, not each keystroke).
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      const accountBalance = parseNumber(balance);
+      const riskFraction = parseNumber(riskPercent);
+      const entryPrice = parseNumber(entry);
+      const stopPrice = parseNumber(stop);
+      if (
+        accountBalance === null ||
+        riskFraction === null ||
+        entryPrice === null ||
+        stopPrice === null
+      ) {
+        setResult(null);
+        return;
+      }
+      apiFetchClient<PositionPlanApiResponse>('/api/calculator/position-plan', {
+        method: 'POST',
+        signal: controller.signal,
+        body: JSON.stringify({
+          account_balance: accountBalance,
+          account_currency: currency,
+          risk_percentage: riskFraction / 100,
+          instrument_symbol: instrument,
+          entry_price: entryPrice,
+          stop_price: stopPrice,
+          target_1_price: parseNumber(target1),
+          target_2_price: parseNumber(target2),
+          confluence_score: parseNumber(confluence),
+          phase: parseNumber(phase),
+          persist: false,
+        }),
+      })
+        .then((r) => setResult(mapResult(r)))
+        .catch(() => {
+          /* aborted request or invalid input — keep the last result */
+        });
+    }, 400);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [balance, currency, riskPercent, instrument, entry, stop, target1, target2, confluence, phase]);
+
+  useEffect(() => {
+    apiFetchClient<OpenRiskResponse>('/api/calculator/open-risk')
+      .then(setOpenRisk)
+      .catch(() => {});
+  }, []);
 
   const blocks = result?.findings.filter((f) => f.level === 'block') ?? [];
   const warnings = result?.findings.filter((f) => f.level === 'warning') ?? [];
@@ -213,6 +290,36 @@ export function PositionSizeCalculator() {
                 </li>
               )}
             </ul>
+          </Card>
+        )}
+
+        {openRisk && (
+          <Card>
+            <CardHeader
+              title="Open risk"
+              subtitle="Aggregate risk across your active setups against the 5% account cap."
+            />
+            <div className={styles.outputTiles}>
+              <StatTile label="Open positions" value={String(openRisk.open_position_count)} />
+              <StatTile
+                label="Total open risk"
+                value={`${(Number(openRisk.total_open_risk_percentage) * 100).toFixed(2)}%`}
+                tone={openRisk.exceeds_cap ? 'danger' : undefined}
+              />
+              <StatTile
+                label="Capacity remaining"
+                value={`${(Number(openRisk.risk_capacity_remaining_percentage) * 100).toFixed(2)}%`}
+              />
+              <StatTile
+                label="Cap"
+                value={`${(Number(openRisk.max_total_risk_percentage) * 100).toFixed(0)}%`}
+              />
+            </div>
+            {openRisk.exceeds_cap && (
+              <div className={`${styles.banner} ${styles.bannerWarning}`}>
+                <p>Your open positions already exceed the 5% account risk cap.</p>
+              </div>
+            )}
           </Card>
         )}
       </div>
