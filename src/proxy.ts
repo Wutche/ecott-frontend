@@ -35,7 +35,9 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isPublic = PUBLIC_PATHS.includes(path);
+  // `/auth/*` (e.g. the email-confirmation callback) must stay reachable
+  // without a session — that's where the session is established.
+  const isPublic = PUBLIC_PATHS.includes(path) || path.startsWith('/auth/');
 
   // Unauthenticated visitor on a protected route -> send to sign-in.
   if (!user && !isPublic) {
